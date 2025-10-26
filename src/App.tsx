@@ -1,0 +1,50 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import QueryProvider from "@/providers/query-client-provider";
+import { LoginProvider } from "@/providers/login-state-provider";
+import ProtectedRoute from "@/providers/protected-route";
+import LoginPage from "@/pages/login/login-page";
+import AdminLayout from "@/components/admin-layout";
+import UserListPage from "@/pages/users/user-list-page";
+import UserCreatePage from "@/pages/users/user-create-page";
+import UserEditPage from "@/pages/users/user-edit-page";
+import UserDetailPage from "@/pages/users/user-detail-page";
+
+function Dashboard() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold mb-4">Hoş Geldiniz!</h1>
+        <p className="text-muted-foreground">Başarıyla giriş yaptınız.</p>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <QueryProvider>
+      <LoginProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route element={<ProtectedRoute />}>
+              <Route element={<AdminLayout />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/users" element={<UserListPage />} />
+                <Route path="/users/create" element={<UserCreatePage />} />
+                <Route path="/users/detail/:id" element={<UserDetailPage />} />
+                <Route path="/users/edit/:id" element={<UserEditPage />} />
+                <Route
+                  path="/"
+                  element={<Navigate to="/dashboard" replace />}
+                />
+              </Route>
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </LoginProvider>
+    </QueryProvider>
+  );
+}
+
+export default App;
