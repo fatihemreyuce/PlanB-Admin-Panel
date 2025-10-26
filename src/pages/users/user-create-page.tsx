@@ -1,69 +1,55 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useCreateUser } from "@/hooks/use-user";
+import {
+  userCreateSchema,
+  type UserCreateFormData,
+} from "@/validations/user.validation";
+import { ArrowLeft, UserPlus } from "lucide-react";
+import { Link } from "react-router-dom";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useCreateUser } from "@/hooks/use-user";
-import { ArrowLeft, Save } from "lucide-react";
 
 export default function UserCreatePage() {
   const navigate = useNavigate();
-  const createUser = useCreateUser();
+  const [formData, setFormData] = useState<UserCreateFormData>({
+    username: "",
+    email: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof UserCreateFormData, string>>
+  >({});
 
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const validate = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!username.trim()) {
-      newErrors.username = "Kullanıcı adı gereklidir";
-    }
-
-    if (!email.trim()) {
-      newErrors.email = "E-posta gereklidir";
-    } else if (!email.includes("@")) {
-      newErrors.email = "Geçerli bir e-posta adresi giriniz";
-    }
-
-    if (!password) {
-      newErrors.password = "Şifre gereklidir";
-    } else if (password.length < 6) {
-      newErrors.password = "Şifre en az 6 karakter olmalıdır";
-    }
-
-    if (password !== confirmPassword) {
-      newErrors.confirmPassword = "Şifreler eşleşmiyor";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  const createUserMutation = useCreateUser();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({});
 
-    if (!validate()) {
+    const result = userCreateSchema.safeParse(formData);
+    if (!result.success) {
+      const fieldErrors: Partial<Record<keyof UserCreateFormData, string>> = {};
+      result.error.issues.forEach((issue) => {
+        if (issue.path[0]) {
+          fieldErrors[issue.path[0] as keyof UserCreateFormData] =
+            issue.message;
+        }
+      });
+      setErrors(fieldErrors);
       return;
     }
 
     try {
-      await createUser.mutateAsync({
-        username,
-        email,
-        password: password!,
-      });
+      await createUserMutation.mutateAsync(result.data);
       navigate("/users");
     } catch (error) {
       console.error("Kullanıcı oluşturma hatası:", error);
@@ -71,112 +57,115 @@ export default function UserCreatePage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate("/users")}
-          className="hover:bg-planb-cream text-white"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
+    <div className="min-h-screen bg-planb-background p-6">
+      <div className="max-w-3xl mx-auto space-y-6">
+        {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-planb-main">Yeni Kullanıcı</h1>
-          <p className="text-planb-grey-1">
-            Yeni bir kullanıcı hesabı oluşturun
-          </p>
+          <Link to="/users">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="mb-4 hover:bg-planb-cream"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          </Link>
+          <div className="flex items-center gap-3">
+            <div className="p-3 rounded-xl bg-planb-main">
+              <UserPlus className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-planb-main">
+                Yeni Kullanıcı
+              </h1>
+              <p className="text-planb-grey-1">
+                Sisteme yeni bir kullanıcı ekleyin
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <Card className="border-planb-grey-2">
-        <form onSubmit={handleSubmit}>
-          <CardHeader className="pb-6">
-            <CardTitle className="text-planb-main">
-              Kullanıcı Bilgileri
-            </CardTitle>
-            <CardDescription className="text-planb-grey-1">
-              Lütfen tüm alanları doldurun
+        {/* Form */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Kullanıcı Bilgileri</CardTitle>
+            <CardDescription>
+              Yeni kullanıcı için gerekli bilgileri doldurun
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-3">
-              <Label htmlFor="username">Kullanıcı Adı *</Label>
-              <Input
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Kullanıcı adı giriniz"
-                className={errors.username ? "border-destructive" : ""}
-              />
-              {errors.username && (
-                <p className="text-sm text-destructive">{errors.username}</p>
-              )}
-            </div>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Username */}
+              <div className="space-y-2">
+                <Label htmlFor="username">Kullanıcı Adı</Label>
+                <Input
+                  id="username"
+                  value={formData.username}
+                  onChange={(e) =>
+                    setFormData({ ...formData, username: e.target.value })
+                  }
+                  placeholder="Örn: john_doe"
+                />
+                {errors.username && (
+                  <p className="text-sm text-planb-red">{errors.username}</p>
+                )}
+              </div>
 
-            <div className="space-y-3">
-              <Label htmlFor="email">E-posta *</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="E-posta adresi giriniz"
-                className={errors.email ? "border-destructive" : ""}
-              />
-              {errors.email && (
-                <p className="text-sm text-destructive">{errors.email}</p>
-              )}
-            </div>
+              {/* Email */}
+              <div className="space-y-2">
+                <Label htmlFor="email">Email Adresi</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  placeholder="Örn: john@example.com"
+                />
+                {errors.email && (
+                  <p className="text-sm text-planb-red">{errors.email}</p>
+                )}
+              </div>
 
-            <div className="space-y-3">
-              <Label htmlFor="password">Şifre *</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Şifre giriniz (min 6 karakter)"
-                className={errors.password ? "border-destructive" : ""}
-              />
-              {errors.password && (
-                <p className="text-sm text-destructive">{errors.password}</p>
-              )}
-            </div>
+              {/* Password */}
+              <div className="space-y-2">
+                <Label htmlFor="password">Şifre</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                  placeholder="Minimum 6 karakter"
+                />
+                {errors.password && (
+                  <p className="text-sm text-planb-red">{errors.password}</p>
+                )}
+              </div>
 
-            <div className="space-y-3">
-              <Label htmlFor="confirmPassword">Şifre Tekrar *</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Şifreyi tekrar giriniz"
-                className={errors.confirmPassword ? "border-destructive" : ""}
-              />
-              {errors.confirmPassword && (
-                <p className="text-sm text-destructive">
-                  {errors.confirmPassword}
-                </p>
-              )}
-            </div>
+              {/* Buttons */}
+              <div className="flex justify-end gap-4 pt-4">
+                <Link to="/users">
+                  <Button variant="outline" type="button">
+                    İptal
+                  </Button>
+                </Link>
+                <Button
+                  type="submit"
+                  disabled={createUserMutation.isPending}
+                  className="bg-planb-main hover:bg-planb-chocolate text-white"
+                >
+                  {createUserMutation.isPending
+                    ? "Oluşturuluyor..."
+                    : "Kullanıcı Oluştur"}
+                </Button>
+              </div>
+            </form>
           </CardContent>
-          <CardFooter className="flex justify-end gap-4 pt-6">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => navigate("/users")}
-              className="border-planb-grey-2 hover:bg-planb-grey-3 text-white"
-            >
-              İptal
-            </Button>
-            <Button type="submit" disabled={createUser.isPending}>
-              <Save className="h-4 w-4 mr-2" />
-              Oluştur
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 }

@@ -60,6 +60,12 @@
   --planb-grey-1: #6b7280;
   --planb-grey-2: #e5e7eb;
   --planb-grey-3: #f3f4f6;
+
+  /* PlanB Transparent Colors */
+  --planb-white-50: rgba(255, 255, 255, 0.5);
+  --planb-white-25: rgba(255, 255, 255, 0.25);
+  --planb-white-10: rgba(255, 255, 255, 0.1);
+  --planb-main-5: rgba(46, 64, 87, 0.05);
 }
 
 a {
@@ -163,6 +169,12 @@ button:focus-visible {
   --color-planb-grey-1: var(--planb-grey-1);
   --color-planb-grey-2: var(--planb-grey-2);
   --color-planb-grey-3: var(--planb-grey-3);
+
+  /* PlanB Transparent Colors */
+  --color-planb-white-50: var(--planb-white-50);
+  --color-planb-white-25: var(--planb-white-25);
+  --color-planb-white-10: var(--planb-white-10);
+  --color-planb-main-5: var(--planb-main-5);
 
   /* PlanB Gradients */
   --gradient-linear-1: linear-gradient(180deg, #ff8c69 0%, #c45a7c 100%);

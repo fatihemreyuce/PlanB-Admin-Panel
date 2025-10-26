@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Search,
+  Plus,
+  Eye,
+  Edit,
+  Trash2,
+  Mail,
+  User,
+  XCircle,
+  AlertTriangle,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -17,381 +20,407 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useUsers, useDeleteUser } from "@/hooks/use-user";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
-import { useUsers, useDeleteUser } from "@/hooks/use-user";
 import { Badge } from "@/components/ui/badge";
 import { Empty } from "@/components/ui/empty";
-import {
-  Plus,
-  Search,
-  Pencil,
-  Trash2,
-  ChevronLeft,
-  ChevronRight,
-  Eye,
-  Users,
-} from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export default function UserListPage() {
-  const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
   const [sort, setSort] = useState("id,desc");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [deleteConfirmText, setDeleteConfirmText] = useState("");
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [confirmText, setConfirmText] = useState("");
+  const [deleteError, setDeleteError] = useState("");
 
-  const { data, isLoading, isError } = useUsers(search, page, size, sort);
-  const deleteUser = useDeleteUser();
+  const { data, isLoading } = useUsers(search, page, size, sort);
+  const deleteUserMutation = useDeleteUser();
 
-  // Debounce for search
   useEffect(() => {
     const timer = setTimeout(() => {
       setSearch(searchValue);
       setPage(0);
     }, 500);
-
     return () => clearTimeout(timer);
   }, [searchValue]);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value);
-  };
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleSizeChange = (newSize: string) => {
-    setSize(Number(newSize));
-    setPage(0);
-  };
-
-  const handleSortChange = (newSort: string) => {
-    setSort(newSort);
-    setPage(0);
-  };
-
-  const handleDeleteClick = (id: number) => {
-    setSelectedUserId(id);
-    setDeleteModalOpen(true);
-    setDeleteConfirmText("");
-  };
-
   const handleDelete = async () => {
-    if (selectedUserId && deleteConfirmText === "dhsaıud") {
-      await deleteUser.mutateAsync(selectedUserId);
-      setDeleteModalOpen(false);
-      setSelectedUserId(null);
-      setDeleteConfirmText("");
+    if (confirmText !== "dhsaıud") {
+      setDeleteError("Onay metni yanlış!");
+      return;
     }
-  };
+    if (!selectedUserId) return;
 
-  const handleDeleteModalClose = () => {
+    await deleteUserMutation.mutateAsync(selectedUserId);
     setDeleteModalOpen(false);
     setSelectedUserId(null);
-    setDeleteConfirmText("");
+    setConfirmText("");
+    setDeleteError("");
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <p>Yükleniyor...</p>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <p className="text-destructive">
-          Kullanıcılar yüklenirken bir hata oluştu.
-        </p>
-      </div>
-    );
-  }
-
-  const users = data?.content || [];
-  const totalPages = data?.totalPages || 0;
+  const users = data?.content ?? [];
   const totalElements = data?.totalElements ?? users.length;
+  const totalPages = data?.totalPages ?? 0;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-planb-main">Kullanıcılar</h1>
-          <p className="text-planb-grey-1">
-            Toplam {totalElements} kullanıcı bulundu
-          </p>
-        </div>
-        <Button onClick={() => navigate("/users/create")}>
-          <Plus className="h-4 w-4 mr-2" />
-          Yeni Kullanıcı
-        </Button>
-      </div>
-
-      <Card className="border-planb-grey-2">
-        <CardHeader>
-          <CardTitle className="text-planb-main">Kullanıcı Listesi</CardTitle>
-          <CardDescription className="text-planb-grey-1">
-            Kullanıcıları arayın, filtreleyin ve yönetin
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {/* Search and Filters */}
-            <div className="flex gap-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="text"
-                    placeholder="Kullanıcı ara..."
-                    value={searchValue}
-                    onChange={handleSearch}
-                    className="pl-10"
-                  />
-                </div>
+    <div className="min-h-screen bg-planb-background p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-white rounded-xl shadow-sm border border-planb-grey-2 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-planb-grey-1 font-medium mb-1">
+                  Toplam Kullanıcı
+                </p>
+                <p className="text-2xl font-bold text-planb-main">
+                  {totalElements}
+                </p>
               </div>
-              <Select value={sort} onValueChange={handleSortChange}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Sırala" />
+              <div className="p-3 rounded-lg bg-planb-cream">
+                <User className="h-6 w-6 text-planb-orange" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-planb-grey-2 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-planb-grey-1 font-medium mb-1">
+                  Aktif Kullanıcı
+                </p>
+                <p className="text-2xl font-bold text-planb-green">
+                  {users.filter((u) => u.active).length}
+                </p>
+              </div>
+              <div className="p-3 rounded-lg bg-green-50">
+                <User className="h-6 w-6 text-planb-green" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-planb-grey-2 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-planb-grey-1 font-medium mb-1">
+                  Toplam Sayfa
+                </p>
+                <p className="text-2xl font-bold text-planb-chocolate">
+                  {totalPages}
+                </p>
+              </div>
+              <div className="p-3 rounded-lg bg-orange-50">
+                <User className="h-6 w-6 text-planb-chocolate" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Card */}
+        <div className="bg-white rounded-xl shadow-sm border border-planb-grey-2">
+          {/* Header */}
+          <div className="p-6 border-b border-planb-grey-2">
+            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-planb-main">
+                  Kullanıcılar
+                </h2>
+                <p className="text-sm text-planb-grey-1 mt-1">
+                  Sistem kullanıcılarını yönetin
+                </p>
+              </div>
+              <Link to="/users/create">
+                <Button
+                  size="lg"
+                  className="bg-planb-main hover:bg-planb-chocolate text-white"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Yeni Kullanıcı
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Search and Filters */}
+          <div className="p-6 border-b border-planb-grey-2">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-planb-grey-1" />
+                <Input
+                  placeholder="Kullanıcı ara..."
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  className="pl-10 h-10"
+                />
+              </div>
+              <Select
+                value={size.toString()}
+                onValueChange={(value) => {
+                  setSize(parseInt(value));
+                  setPage(0);
+                }}
+              >
+                <SelectTrigger className="w-full md:w-40 h-10">
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="id,desc">ID (Azalan)</SelectItem>
-                  <SelectItem value="id,asc">ID (Artan)</SelectItem>
-                  <SelectItem value="username,asc">
-                    Kullanıcı Adı (A-Z)
-                  </SelectItem>
-                  <SelectItem value="username,desc">
-                    Kullanıcı Adı (Z-A)
-                  </SelectItem>
-                  <SelectItem value="email,asc">E-posta (A-Z)</SelectItem>
-                  <SelectItem value="email,desc">E-posta (Z-A)</SelectItem>
+                  <SelectItem value="10">10 / sayfa</SelectItem>
+                  <SelectItem value="20">20 / sayfa</SelectItem>
+                  <SelectItem value="50">50 / sayfa</SelectItem>
+                  <SelectItem value="100">100 / sayfa</SelectItem>
                 </SelectContent>
               </Select>
-              <Select value={size.toString()} onValueChange={handleSizeChange}>
-                <SelectTrigger className="w-[120px]">
-                  <SelectValue placeholder="Sayfa boyutu" />
+              <Select value={sort} onValueChange={(value) => setSort(value)}>
+                <SelectTrigger className="w-full md:w-40 h-10">
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="5">5 / Sayfa</SelectItem>
-                  <SelectItem value="10">10 / Sayfa</SelectItem>
-                  <SelectItem value="20">20 / Sayfa</SelectItem>
-                  <SelectItem value="50">50 / Sayfa</SelectItem>
+                  <SelectItem value="id,desc">En Yeni</SelectItem>
+                  <SelectItem value="id,asc">En Eski</SelectItem>
+                  <SelectItem value="username,asc">İsim (A-Z)</SelectItem>
+                  <SelectItem value="username,desc">İsim (Z-A)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
+          </div>
 
-            {/* Table */}
-            <div className="border rounded-lg">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b bg-muted/50">
-                    <th className="px-6 py-3 text-left text-sm font-medium">
-                      ID
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-medium">
-                      Kullanıcı Adı
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-medium">
-                      E-posta
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-medium">
-                      Durum
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-medium">
-                      Oluşturulma
-                    </th>
-                    <th className="px-6 py-3 text-right text-sm font-medium">
-                      İşlemler
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map((user) => (
-                    <tr
-                      key={user.id}
-                      className="border-b hover:bg-muted/50 transition"
-                    >
-                      <td className="px-6 py-4 text-sm">{user.id}</td>
-                      <td className="px-6 py-4 text-sm font-medium">
-                        {user.username}
-                      </td>
-                      <td className="px-6 py-4 text-sm">{user.email}</td>
-                      <td className="px-6 py-4 text-sm">
-                        <Badge variant={user.active ? "success" : "error"}>
-                          {user.active ? "Aktif" : "Pasif"}
-                        </Badge>
-                      </td>
-                      <td className="px-6 py-4 text-sm">
-                        {new Date(user.createdAt).toLocaleDateString("tr-TR")}
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex justify-end gap-2">
-                          <Button
-                            size="icon-sm"
-                            variant="ghost"
-                            onClick={() => navigate(`/users/detail/${user.id}`)}
-                            className="text-white"
-                            title="Detay"
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="icon-sm"
-                            variant="ghost"
-                            onClick={() => navigate(`/users/edit/${user.id}`)}
-                            className="text-white"
-                            title="Düzenle"
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="icon-sm"
-                            variant="ghost"
-                            onClick={() => handleDeleteClick(user.id)}
-                            className="hover:bg-planb-red/10"
-                            title="Sil"
-                          >
-                            <Trash2 className="h-4 w-4 text-planb-red" />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Empty State */}
-            {users.length === 0 && (
+          {/* Content */}
+          <div className="p-6">
+            {isLoading ? (
+              <div className="flex items-center justify-center py-20">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-planb-main"></div>
+              </div>
+            ) : users.length === 0 ? (
               <Empty
-                icon={<Users className="h-6 w-6 text-planb-grey-1" />}
-                title={search ? "Kullanıcı bulunamadı" : "Henüz kullanıcı yok"}
-                description={
-                  search
-                    ? "Arama kriterlerinize uygun kullanıcı bulunamadı. Lütfen farklı bir arama terimi deneyin."
-                    : "Henüz hiç kullanıcı oluşturulmamış. İlk kullanıcıyı oluşturmak için 'Yeni Kullanıcı' butonuna tıklayın."
-                }
+                icon={<Search className="h-8 w-8 text-planb-grey-1" />}
+                title="Kullanıcı Bulunamadı"
+                description="Arama kriterlerinize uygun kullanıcı bulunamadı"
                 action={
-                  !search && (
-                    <Button onClick={() => navigate("/users/create")}>
+                  <Link to="/users/create">
+                    <Button>
                       <Plus className="h-4 w-4 mr-2" />
-                      Yeni Kullanıcı Oluştur
+                      Yeni Kullanıcı Ekle
                     </Button>
-                  )
+                  </Link>
                 }
               />
+            ) : (
+              <div className="space-y-3">
+                {users.map((user) => (
+                  <div
+                    key={user.id}
+                    className="flex items-center justify-between p-4 rounded-lg border border-planb-grey-2 hover:bg-planb-grey-3 transition-colors"
+                  >
+                    <div className="flex items-center gap-4 flex-1">
+                      <Avatar className="h-12 w-12">
+                        <AvatarFallback className="bg-planb-orange text-white text-sm font-semibold">
+                          {user.username[0].toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold text-planb-main">
+                            {user.username}
+                          </h3>
+                          <Badge
+                            variant={user.active ? "default" : "secondary"}
+                            className={
+                              user.active
+                                ? "bg-green-100 text-green-700 hover:bg-green-100"
+                                : ""
+                            }
+                          >
+                            {user.active ? "Aktif" : "Pasif"}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-planb-grey-1 mt-1">
+                          <Mail className="h-3 w-3" />
+                          <span>{user.email}</span>
+                        </div>
+                        <div className="text-xs text-planb-grey-1 mt-1">
+                          {new Date(user.createdAt).toLocaleDateString("tr-TR")}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Link to={`/users/detail/${user.id}`}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 hover:bg-planb-cream"
+                        >
+                          <Eye className="h-4 w-4 text-planb-main" />
+                        </Button>
+                      </Link>
+                      <Link to={`/users/edit/${user.id}`}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 hover:bg-planb-cream"
+                        >
+                          <Edit className="h-4 w-4 text-planb-main" />
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => {
+                          setSelectedUserId(user.id);
+                          setDeleteModalOpen(true);
+                        }}
+                        className="h-8 w-8 hover:bg-red-50"
+                      >
+                        <Trash2 className="h-4 w-4 text-planb-red" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
+          </div>
 
-            {/* Pagination */}
-            {totalPages > 1 && (
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="p-6 border-t border-planb-grey-2">
               <div className="flex items-center justify-between">
-                <p className="text-sm text-muted-foreground">
-                  Sayfa {page + 1} / {totalPages}
+                <p className="text-sm text-planb-grey-1">
+                  Sayfa {page + 1} / {totalPages} • Toplam {totalElements} kayıt
                 </p>
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handlePageChange(page - 1)}
+                    onClick={() => setPage(page - 1)}
                     disabled={page === 0}
                   >
-                    <ChevronLeft className="h-4 w-4" />
+                    Önceki
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handlePageChange(page + 1)}
+                    onClick={() => setPage(page + 1)}
                     disabled={page >= totalPages - 1}
                   >
-                    <ChevronRight className="h-4 w-4" />
+                    Sonraki
                   </Button>
                 </div>
               </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Delete Modal */}
-      <Dialog open={deleteModalOpen} onOpenChange={handleDeleteModalClose}>
-        <DialogContent className="border-planb-red/20 max-w-md shadow-xl">
-          <DialogHeader className="pb-4 border-b border-planb-grey-2">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-planb-red/10">
-                <Trash2 className="h-5 w-5 text-planb-red" />
-              </div>
-              <div>
-                <DialogTitle className="text-planb-main text-xl font-bold">
-                  Kullanıcıyı Sil
-                </DialogTitle>
-                <DialogDescription className="text-planb-grey-1 text-sm">
-                  Bu işlem geri alınamaz
-                </DialogDescription>
-              </div>
-            </div>
-          </DialogHeader>
-          <div className="py-6">
-            <div className="rounded-lg bg-planb-cream/30 p-4 mb-4">
-              <p className="text-sm text-planb-main font-medium mb-2">
-                Silme işlemini onaylamak için aşağıya "dhsaıud" yazın
-              </p>
-            </div>
-            <div className="space-y-2">
-              <Label
-                htmlFor="delete-confirm"
-                className="text-planb-main text-sm font-semibold"
-              >
-                Onay metnini girin
-              </Label>
-              <Input
-                id="delete-confirm"
-                type="text"
-                value={deleteConfirmText}
-                onChange={(e) => setDeleteConfirmText(e.target.value)}
-                placeholder="dhsaıud"
-                className="w-full"
-                autoFocus
-              />
-              {deleteConfirmText && deleteConfirmText !== "dhsaıud" && (
-                <div className="flex items-center gap-2 text-sm text-planb-red font-medium p-2 rounded bg-planb-red/10">
-                  <Trash2 className="h-4 w-4" />
-                  <span>Onay metni yanlış!</span>
+      <Dialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
+        <DialogContent className="bg-white max-w-lg p-0 border-0 shadow-2xl">
+          <div className="relative overflow-hidden">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 bg-gradient-to-br from-red-50 via-white to-orange-50 opacity-50"></div>
+
+            <div className="relative p-8">
+              {/* Header with Icon */}
+              <div className="flex items-start gap-4 mb-8">
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-red-500 to-orange-500 shadow-lg">
+                  <Trash2 className="h-7 w-7 text-white" />
                 </div>
-              )}
+                <div className="flex-1">
+                  <DialogTitle className="text-2xl font-bold text-planb-main mb-2">
+                    Kullanıcıyı Sil
+                  </DialogTitle>
+                  <DialogDescription className="text-sm text-planb-grey-1 leading-relaxed">
+                    Bu işlem geri alınamaz! Lütfen silmek istediğinizden emin
+                    olun.
+                  </DialogDescription>
+                </div>
+              </div>
+
+              {/* Warning Box */}
+              <div className="relative bg-white border-2 border-red-200 rounded-2xl p-5 mb-8 shadow-sm">
+                <div className="flex items-start gap-4">
+                  <div className="p-2 rounded-xl bg-red-50">
+                    <AlertTriangle className="h-5 w-5 text-red-600" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-planb-main mb-1">
+                      Dikkat!
+                    </h3>
+                    <p className="text-sm text-planb-grey-1 leading-relaxed">
+                      Silmek istediğinize emin misiniz? Onaylamak için aşağıya{" "}
+                      <span className="font-mono font-bold text-planb-main bg-planb-cream px-2 py-0.5 rounded">
+                        dhsaıud
+                      </span>{" "}
+                      yazın.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Input Section */}
+              <div className="space-y-3 mb-8">
+                <label className="text-sm font-bold text-planb-main flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-planb-red"></div>
+                  Onay Metni
+                </label>
+                <Input
+                  placeholder="Onay metnini buraya girin..."
+                  value={confirmText}
+                  onChange={(e) => {
+                    setConfirmText(e.target.value);
+                    setDeleteError("");
+                  }}
+                  className="h-12 text-base border-2 focus:border-planb-red"
+                />
+                {deleteError && (
+                  <div className="flex items-center gap-2 text-sm text-planb-red bg-red-50 p-3 rounded-xl">
+                    <XCircle className="h-4 w-4 shrink-0" />
+                    <span className="font-medium">{deleteError}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Actions */}
+              <div className="flex justify-end gap-3 pt-6 border-t-2 border-planb-grey-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setDeleteModalOpen(false);
+                    setSelectedUserId(null);
+                    setConfirmText("");
+                    setDeleteError("");
+                  }}
+                  className="px-8 h-11 font-semibold text-white"
+                >
+                  İptal
+                </Button>
+                <Button
+                  onClick={handleDelete}
+                  disabled={deleteUserMutation.isPending}
+                  className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white px-8 h-11 font-semibold shadow-lg hover:shadow-xl transition-all"
+                >
+                  {deleteUserMutation.isPending ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Siliniyor...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Sil
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
-          <DialogFooter className="gap-3 pt-4 border-t border-planb-grey-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleDeleteModalClose}
-              className="flex-1 border-planb-grey-2 text-white hover:bg-planb-grey-3"
-            >
-              İptal
-            </Button>
-            <Button
-              type="button"
-              variant="destructive"
-              onClick={handleDelete}
-              disabled={deleteConfirmText !== "dhsaıud"}
-              className="flex-1 min-w-[120px]"
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Kullanıcıyı Sil
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

@@ -1,80 +1,74 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useGetUserById, useUpdateUser } from "@/hooks/use-user";
+import {
+  userUpdateSchema,
+  type UserUpdateFormData,
+} from "@/validations/user.validation";
+import { ArrowLeft, UserCog } from "lucide-react";
+import { Link } from "react-router-dom";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useUpdateUser, useGetUserById } from "@/hooks/use-user";
-import { ArrowLeft, Save } from "lucide-react";
 
 export default function UserEditPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const updateUser = useUpdateUser();
+  const userId = id ? parseInt(id) : 0;
 
-  const { data: user, isLoading } = useGetUserById(Number(id));
+  const { data: user, isLoading } = useGetUserById(userId);
+  const updateUserMutation = useUpdateUser();
 
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [formData, setFormData] = useState<UserUpdateFormData>({
+    username: "",
+    email: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof UserUpdateFormData, string>>
+  >({});
 
   useEffect(() => {
     if (user) {
-      setUsername(user.username);
-      setEmail(user.email);
+      setFormData({
+        username: user.username,
+        email: user.email,
+        password: "",
+      });
     }
   }, [user]);
 
-  const validate = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!username.trim()) {
-      newErrors.username = "Kullanıcı adı gereklidir";
-    }
-
-    if (!email.trim()) {
-      newErrors.email = "E-posta gereklidir";
-    } else if (!email.includes("@")) {
-      newErrors.email = "Geçerli bir e-posta adresi giriniz";
-    }
-
-    if (password) {
-      if (password.length < 6) {
-        newErrors.password = "Şifre en az 6 karakter olmalıdır";
-      }
-
-      if (password !== confirmPassword) {
-        newErrors.confirmPassword = "Şifreler eşleşmiyor";
-      }
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({});
 
-    if (!validate() || !id) {
+    const result = userUpdateSchema.safeParse(formData);
+    if (!result.success) {
+      const fieldErrors: Partial<Record<keyof UserUpdateFormData, string>> = {};
+      result.error.issues.forEach((issue) => {
+        if (issue.path[0]) {
+          fieldErrors[issue.path[0] as keyof UserUpdateFormData] =
+            issue.message;
+        }
+      });
+      setErrors(fieldErrors);
       return;
     }
 
     try {
-      await updateUser.mutateAsync({
-        id: Number(id),
+      await updateUserMutation.mutateAsync({
+        id: userId,
         request: {
-          username,
-          email,
-          password: password || "",
+          username: result.data.username,
+          email: result.data.email,
+          password: result.data.password || "",
         },
       });
       navigate("/users");
@@ -85,129 +79,135 @@ export default function UserEditPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <p>Yükleniyor...</p>
+      <div className="min-h-screen flex items-center justify-center bg-planb-background">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-planb-main"></div>
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <p className="text-destructive">Kullanıcı bulunamadı.</p>
+      <div className="min-h-screen flex items-center justify-center bg-planb-background">
+        <div className="text-center space-y-4">
+          <p className="text-planb-red font-bold">Kullanıcı bulunamadı</p>
+          <Link to="/users">
+            <Button variant="outline">Geri Dön</Button>
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate("/users")}
-          className="hover:bg-planb-cream text-white"
-        >
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
+    <div className="min-h-screen bg-planb-background p-6">
+      <div className="max-w-3xl mx-auto space-y-6">
+        {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-planb-main">
-            Kullanıcı Düzenle
-          </h1>
-          <p className="text-planb-grey-1">Kullanıcı bilgilerini güncelleyin</p>
+          <Link to="/users">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="mb-4 hover:bg-planb-cream"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          </Link>
+          <div className="flex items-center gap-3">
+            <div className="p-3 rounded-xl bg-planb-green">
+              <UserCog className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-planb-main">
+                Kullanıcı Düzenle
+              </h1>
+              <p className="text-planb-grey-1">
+                Kullanıcı bilgilerini güncelleyin
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <Card className="border-planb-grey-2">
-        <form onSubmit={handleSubmit}>
-          <CardHeader className="pb-8">
-            <CardTitle className="text-planb-main">
-              Kullanıcı Bilgileri
-            </CardTitle>
-            <CardDescription className="text-planb-grey-1">
-              Bilgileri güncelleyin (Şifre boş bırakılırsa değişmez)
+        {/* Form */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Kullanıcı Bilgileri</CardTitle>
+            <CardDescription>
+              Düzenlemek istediğiniz bilgileri güncelleyin
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-8">
-            <div className="space-y-3">
-              <Label htmlFor="username">Kullanıcı Adı *</Label>
-              <Input
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Kullanıcı adı giriniz"
-                className={errors.username ? "border-destructive" : ""}
-              />
-              {errors.username && (
-                <p className="text-sm text-destructive">{errors.username}</p>
-              )}
-            </div>
-
-            <div className="space-y-3">
-              <Label htmlFor="email">E-posta *</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="E-posta adresi giriniz"
-                className={errors.email ? "border-destructive" : ""}
-              />
-              {errors.email && (
-                <p className="text-sm text-destructive">{errors.email}</p>
-              )}
-            </div>
-
-            <div className="space-y-3">
-              <Label htmlFor="password">Yeni Şifre</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Şifrenizi değiştiriniz"
-                className={errors.password ? "border-destructive" : ""}
-              />
-              {errors.password && (
-                <p className="text-sm text-destructive">{errors.password}</p>
-              )}
-            </div>
-
-            {password && (
-              <div className="space-y-3">
-                <Label htmlFor="confirmPassword">Yeni Şifre Tekrar</Label>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Username */}
+              <div className="space-y-2">
+                <Label htmlFor="username">Kullanıcı Adı</Label>
                 <Input
-                  id="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Yeni şifreyi tekrar giriniz"
-                  className={errors.confirmPassword ? "border-destructive" : ""}
+                  id="username"
+                  value={formData.username}
+                  onChange={(e) =>
+                    setFormData({ ...formData, username: e.target.value })
+                  }
+                  placeholder="Örn: john_doe"
                 />
-                {errors.confirmPassword && (
-                  <p className="text-sm text-destructive">
-                    {errors.confirmPassword}
-                  </p>
+                {errors.username && (
+                  <p className="text-sm text-planb-red">{errors.username}</p>
                 )}
               </div>
-            )}
+
+              {/* Email */}
+              <div className="space-y-2">
+                <Label htmlFor="email">Email Adresi</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  placeholder="Örn: john@example.com"
+                />
+                {errors.email && (
+                  <p className="text-sm text-planb-red">{errors.email}</p>
+                )}
+              </div>
+
+              {/* Password */}
+              <div className="space-y-2">
+                <Label htmlFor="password">Şifre (Opsiyonel)</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                  placeholder="Değiştirmek istemiyorsanız boş bırakın"
+                />
+                {errors.password && (
+                  <p className="text-sm text-planb-red">{errors.password}</p>
+                )}
+              </div>
+
+              {/* Buttons */}
+              <div className="flex justify-end gap-4 pt-4">
+                <Link to="/users">
+                  <Button variant="outline" type="button">
+                    İptal
+                  </Button>
+                </Link>
+                <Button
+                  type="submit"
+                  disabled={updateUserMutation.isPending}
+                  className="bg-planb-green hover:bg-planb-main text-white"
+                >
+                  {updateUserMutation.isPending
+                    ? "Güncelleniyor..."
+                    : "Değişiklikleri Kaydet"}
+                </Button>
+              </div>
+            </form>
           </CardContent>
-          <CardFooter className="flex justify-end gap-4 pt-8">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => navigate("/users")}
-              className="border-planb-grey-2 hover:bg-planb-grey-3 text-white"
-            >
-              İptal
-            </Button>
-            <Button type="submit" disabled={updateUser.isPending}>
-              <Save className="h-4 w-4 mr-2" />
-              Güncelle
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 }

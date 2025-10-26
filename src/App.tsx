@@ -32,8 +32,8 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/users" element={<UserListPage />} />
                 <Route path="/users/create" element={<UserCreatePage />} />
-                <Route path="/users/detail/:id" element={<UserDetailPage />} />
                 <Route path="/users/edit/:id" element={<UserEditPage />} />
+                <Route path="/users/detail/:id" element={<UserDetailPage />} />
                 <Route
                   path="/"
                   element={<Navigate to="/dashboard" replace />}
