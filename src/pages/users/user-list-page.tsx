@@ -30,6 +30,14 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Empty } from "@/components/ui/empty";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export default function UserListPage() {
   const [searchValue, setSearchValue] = useState("");
@@ -54,8 +62,10 @@ export default function UserListPage() {
   }, [searchValue]);
 
   const handleDelete = async () => {
-    if (confirmText !== "dhsaıud") {
-      setDeleteError("Onay metni yanlış!");
+    if (!selectedUser) return;
+
+    if (confirmText !== selectedUser.username) {
+      setDeleteError(`Lütfen "${selectedUser.username}" yazın`);
       return;
     }
     if (!selectedUserId) return;
@@ -69,7 +79,12 @@ export default function UserListPage() {
 
   const users = data?.content ?? [];
   const totalElements = data?.totalElements ?? users.length;
-  const totalPages = data?.totalPages ?? 0;
+  const totalPages =
+    data?.totalPages ??
+    (totalElements > 0 ? Math.ceil(totalElements / size) : 0);
+
+  // Find selected user for delete modal
+  const selectedUser = users.find((u) => u.id === selectedUserId);
 
   return (
     <div className="min-h-screen bg-planb-background p-6">
@@ -112,10 +127,10 @@ export default function UserListPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-planb-grey-1 font-medium mb-1">
-                  Toplam Sayfa
+                  Pasif Kullanıcı
                 </p>
                 <p className="text-2xl font-bold text-planb-chocolate">
-                  {totalPages}
+                  {users.filter((u) => !u.active).length}
                 </p>
               </div>
               <div className="p-3 rounded-lg bg-orange-50">
@@ -214,23 +229,46 @@ export default function UserListPage() {
                 }
               />
             ) : (
-              <div className="space-y-3">
-                {users.map((user) => (
-                  <div
-                    key={user.id}
-                    className="flex items-center justify-between p-4 rounded-lg border border-planb-grey-2 hover:bg-planb-grey-3 transition-colors"
-                  >
-                    <div className="flex items-center gap-4 flex-1">
-                      <Avatar className="h-12 w-12">
-                        <AvatarFallback className="bg-planb-orange text-white text-sm font-semibold">
-                          {user.username[0].toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-semibold text-planb-main">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="hover:bg-transparent">
+                      <TableHead className="w-[50px]">Avatar</TableHead>
+                      <TableHead className="font-semibold">
+                        Kullanıcı Adı
+                      </TableHead>
+                      <TableHead className="font-semibold">Email</TableHead>
+                      <TableHead className="font-semibold">Durum</TableHead>
+                      <TableHead className="font-semibold">
+                        Oluşturulma
+                      </TableHead>
+                      <TableHead className="text-right font-semibold">
+                        İşlemler
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {users.map((user) => (
+                      <TableRow key={user.id} className="hover:bg-planb-grey-3">
+                        <TableCell>
+                          <Avatar className="h-12 w-12">
+                            <AvatarFallback className="bg-planb-orange text-white text-sm font-semibold">
+                              {user.username[0].toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                        </TableCell>
+                        <TableCell>
+                          <div className="font-semibold text-planb-main">
                             {user.username}
-                          </h3>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2 text-sm text-planb-grey-1">
+                            <Mail className="h-3 w-3" />
+                            <span>{user.email}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
                           <Badge
                             variant={user.active ? "default" : "secondary"}
                             className={
@@ -241,49 +279,48 @@ export default function UserListPage() {
                           >
                             {user.active ? "Aktif" : "Pasif"}
                           </Badge>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-planb-grey-1 mt-1">
-                          <Mail className="h-3 w-3" />
-                          <span>{user.email}</span>
-                        </div>
-                        <div className="text-xs text-planb-grey-1 mt-1">
-                          {new Date(user.createdAt).toLocaleDateString("tr-TR")}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Link to={`/users/detail/${user.id}`}>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 hover:bg-planb-cream"
-                        >
-                          <Eye className="h-4 w-4 text-planb-main" />
-                        </Button>
-                      </Link>
-                      <Link to={`/users/edit/${user.id}`}>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 hover:bg-planb-cream"
-                        >
-                          <Edit className="h-4 w-4 text-planb-main" />
-                        </Button>
-                      </Link>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => {
-                          setSelectedUserId(user.id);
-                          setDeleteModalOpen(true);
-                        }}
-                        className="h-8 w-8 hover:bg-red-50"
-                      >
-                        <Trash2 className="h-4 w-4 text-planb-red" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm text-planb-grey-1">
+                            {new Date(user.createdAt).toLocaleDateString(
+                              "tr-TR"
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center justify-end gap-2">
+                            <Link to={`/users/detail/${user.id}`}>
+                              <Button
+                                size="icon"
+                                className="!h-8 !w-8 !bg-white hover:!bg-gray-100 !text-blue-600 !border-0"
+                              >
+                                <Eye className="h-4 w-4 text-blue-600" />
+                              </Button>
+                            </Link>
+                            <Link to={`/users/edit/${user.id}`}>
+                              <Button
+                                size="icon"
+                                className="!h-8 !w-8 !bg-white hover:!bg-gray-100 !text-blue-600 !border-0"
+                              >
+                                <Edit className="h-4 w-4 text-blue-600" />
+                              </Button>
+                            </Link>
+                            <Button
+                              size="icon"
+                              onClick={() => {
+                                setSelectedUserId(user.id);
+                                setDeleteModalOpen(true);
+                              }}
+                              className="!h-8 !w-8 !bg-white hover:!bg-gray-100 !text-red-600 !border-0"
+                            >
+                              <Trash2 className="h-4 w-4 text-red-600" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
             )}
           </div>
@@ -344,34 +381,40 @@ export default function UserListPage() {
               </div>
 
               {/* Warning Box */}
-              <div className="relative bg-white border-2 border-red-200 rounded-2xl p-5 mb-8 shadow-sm">
-                <div className="flex items-start gap-4">
-                  <div className="p-2 rounded-xl bg-red-50">
-                    <AlertTriangle className="h-5 w-5 text-red-600" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-planb-main mb-1">
-                      Dikkat!
-                    </h3>
-                    <p className="text-sm text-planb-grey-1 leading-relaxed">
-                      Silmek istediğinize emin misiniz? Onaylamak için aşağıya{" "}
-                      <span className="font-mono font-bold text-planb-main bg-planb-cream px-2 py-0.5 rounded">
-                        dhsaıud
-                      </span>{" "}
-                      yazın.
-                    </p>
+              {selectedUser && (
+                <div className="relative bg-white border-2 border-red-200 rounded-2xl p-5 mb-8 shadow-sm">
+                  <div className="flex items-start gap-4">
+                    <div className="p-2 rounded-xl bg-red-50">
+                      <AlertTriangle className="h-5 w-5 text-red-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-planb-main mb-1">
+                        Dikkat! {selectedUser.username} kullanıcısını silmek
+                        üzeresiniz
+                      </h3>
+                      <p className="text-sm text-planb-grey-1 leading-relaxed mt-2">
+                        Onaylamak için kullanıcı adını yazın:{" "}
+                        <span className="font-mono font-bold text-planb-main bg-planb-cream px-2 py-0.5 rounded">
+                          {selectedUser.username}
+                        </span>
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Input Section */}
               <div className="space-y-3 mb-8">
                 <label className="text-sm font-bold text-planb-main flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-planb-red"></div>
-                  Onay Metni
+                  Kullanıcı Adı
                 </label>
                 <Input
-                  placeholder="Onay metnini buraya girin..."
+                  placeholder={
+                    selectedUser
+                      ? `"${selectedUser.username}" yazın`
+                      : "Kullanıcı adını girin..."
+                  }
                   value={confirmText}
                   onChange={(e) => {
                     setConfirmText(e.target.value);

@@ -52,29 +52,37 @@ export default function UserDetailPage() {
     <div className="min-h-screen bg-planb-background p-6">
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Header */}
-        <div className="bg-white rounded-xl shadow-sm border border-planb-grey-2 overflow-hidden">
-          <div className="p-6">
+        <div className="bg-white rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
+          <div className="bg-gradient-to-br from-indigo-600 to-purple-600 p-8">
             <Link to="/users">
-              <Button variant="outline" size="icon" className="mb-4">
+              <Button
+                size="icon"
+                className="mb-6 !bg-white !text-black hover:!bg-gray-100"
+              >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
             </Link>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <Avatar className="h-16 w-16 border-2 border-planb-grey-2">
-                  <AvatarFallback className="bg-planb-main text-white text-xl font-bold">
-                    {user.username[0].toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
+                <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-sm">
+                  <Avatar className="h-20 w-20">
+                    <AvatarFallback className="bg-white text-planb-main text-2xl font-bold">
+                      {user.username[0].toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-planb-main mb-1">
+                  <h1 className="text-3xl font-bold text-white mb-2">
                     {user.username}
                   </h1>
-                  <p className="text-planb-grey-1">{user.email}</p>
+                  <div className="flex items-center gap-2 text-white/90">
+                    <Mail className="h-4 w-4" />
+                    <p>{user.email}</p>
+                  </div>
                 </div>
               </div>
               <Link to={`/users/edit/${user.id}`}>
-                <Button>
+                <Button className="bg-white text-planb-main hover:bg-gray-100 shadow-lg">
                   <Edit className="h-4 w-4 mr-2" />
                   Düzenle
                 </Button>

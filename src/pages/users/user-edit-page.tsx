@@ -8,7 +8,7 @@ import {
   userUpdateSchema,
   type UserUpdateFormData,
 } from "@/validations/user.validation";
-import { ArrowLeft, UserCog } from "lucide-react";
+import { ArrowLeft, UserCog, User, Mail, KeyRound, Info } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   Card,
@@ -100,46 +100,73 @@ export default function UserEditPage() {
 
   return (
     <div className="min-h-screen bg-planb-background p-6">
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
-        <div>
-          <Link to="/users">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="mb-4 hover:bg-planb-cream"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="p-3 rounded-xl bg-planb-green">
-              <UserCog className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-planb-main">
-                Kullanıcı Düzenle
-              </h1>
-              <p className="text-planb-grey-1">
-                Kullanıcı bilgilerini güncelleyin
-              </p>
+        <div className="bg-white rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
+          <div className="bg-gradient-to-br from-planb-green to-planb-main p-8">
+            <Link to="/users">
+              <Button
+                size="icon"
+                className="mb-6 !bg-white !text-black hover:!bg-gray-100"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+            </Link>
+            <div className="flex items-center gap-4">
+              <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-sm">
+                <UserCog className="h-8 w-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-white mb-2">
+                  Kullanıcı Düzenle
+                </h1>
+                <p className="text-white/90">
+                  Kullanıcı bilgilerini güncelleyin
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
+        {/* Info Card */}
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-100 rounded-xl p-4">
+          <div className="flex items-start gap-3">
+            <Info className="h-5 w-5 text-blue-600 mt-0.5" />
+            <p className="text-sm text-blue-800">
+              <strong className="font-semibold">Güncelleme Notu:</strong>{" "}
+              Kullanıcı bilgilerini güncellemek için tüm alanları doldurmanız
+              gerekmektedir. Şifre alanı zorunludur ve minimum 6 karakter
+              olmalıdır.
+            </p>
+          </div>
+        </div>
+
         {/* Form */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Kullanıcı Bilgileri</CardTitle>
-            <CardDescription>
-              Düzenlemek istediğiniz bilgileri güncelleyin
-            </CardDescription>
+        <Card className="shadow-lg border-0">
+          <CardHeader className="border-b border-planb-grey-2">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-planb-green">
+                <User className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <CardTitle>Kullanıcı Bilgileri</CardTitle>
+                <CardDescription>
+                  Düzenlemek istediğiniz bilgileri güncelleyin
+                </CardDescription>
+              </div>
+            </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Username */}
-              <div className="space-y-2">
-                <Label htmlFor="username">Kullanıcı Adı</Label>
+              <div className="space-y-3">
+                <Label
+                  htmlFor="username"
+                  className="flex items-center gap-2 text-base font-semibold"
+                >
+                  <User className="h-4 w-4 text-planb-main" />
+                  Kullanıcı Adı
+                </Label>
                 <Input
                   id="username"
                   value={formData.username}
@@ -147,15 +174,24 @@ export default function UserEditPage() {
                     setFormData({ ...formData, username: e.target.value })
                   }
                   placeholder="Örn: john_doe"
+                  className="h-12 text-base"
                 />
                 {errors.username && (
-                  <p className="text-sm text-planb-red">{errors.username}</p>
+                  <p className="text-sm text-planb-red font-medium">
+                    {errors.username}
+                  </p>
                 )}
               </div>
 
               {/* Email */}
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Adresi</Label>
+              <div className="space-y-3">
+                <Label
+                  htmlFor="email"
+                  className="flex items-center gap-2 text-base font-semibold"
+                >
+                  <Mail className="h-4 w-4 text-planb-main" />
+                  Email Adresi
+                </Label>
                 <Input
                   id="email"
                   type="email"
@@ -164,15 +200,24 @@ export default function UserEditPage() {
                     setFormData({ ...formData, email: e.target.value })
                   }
                   placeholder="Örn: john@example.com"
+                  className="h-12 text-base"
                 />
                 {errors.email && (
-                  <p className="text-sm text-planb-red">{errors.email}</p>
+                  <p className="text-sm text-planb-red font-medium">
+                    {errors.email}
+                  </p>
                 )}
               </div>
 
               {/* Password */}
-              <div className="space-y-2">
-                <Label htmlFor="password">Şifre (Opsiyonel)</Label>
+              <div className="space-y-3">
+                <Label
+                  htmlFor="password"
+                  className="flex items-center gap-2 text-base font-semibold"
+                >
+                  <KeyRound className="h-4 w-4 text-planb-main" />
+                  Yeni Şifre
+                </Label>
                 <Input
                   id="password"
                   type="password"
@@ -180,28 +225,43 @@ export default function UserEditPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
                   }
-                  placeholder="Değiştirmek istemiyorsanız boş bırakın"
+                  placeholder="Yeni şifre girin (minimum 6 karakter)"
+                  className="h-12 text-base"
                 />
                 {errors.password && (
-                  <p className="text-sm text-planb-red">{errors.password}</p>
+                  <p className="text-sm text-planb-red font-medium">
+                    {errors.password}
+                  </p>
                 )}
               </div>
 
               {/* Buttons */}
-              <div className="flex justify-end gap-4 pt-4">
+              <div className="flex justify-end gap-4 pt-6 border-t border-planb-grey-2">
                 <Link to="/users">
-                  <Button variant="outline" type="button">
+                  <Button
+                    variant="outline"
+                    type="button"
+                    className="px-8 h-11 font-semibold"
+                  >
                     İptal
                   </Button>
                 </Link>
                 <Button
                   type="submit"
                   disabled={updateUserMutation.isPending}
-                  className="bg-planb-green hover:bg-planb-main text-white"
+                  className="bg-gradient-to-r from-planb-green to-planb-main hover:shadow-lg text-white px-8 h-11 font-semibold"
                 >
-                  {updateUserMutation.isPending
-                    ? "Güncelleniyor..."
-                    : "Değişiklikleri Kaydet"}
+                  {updateUserMutation.isPending ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Güncelleniyor...
+                    </>
+                  ) : (
+                    <>
+                      <UserCog className="h-4 w-4 mr-2" />
+                      Değişiklikleri Kaydet
+                    </>
+                  )}
                 </Button>
               </div>
             </form>

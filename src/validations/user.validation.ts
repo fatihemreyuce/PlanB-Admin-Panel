@@ -26,8 +26,8 @@ export const userUpdateSchema = z.object({
     .min(5, "Email en az 5 karakter olmalıdır"),
   password: z
     .string()
-    .max(100, "Şifre en fazla 100 karakter olabilir")
-    .optional(),
+    .min(6, "Şifre en az 6 karakter olmalıdır")
+    .max(100, "Şifre en fazla 100 karakter olabilir"),
 });
 
 export type UserCreateFormData = z.infer<typeof userCreateSchema>;
