@@ -1,7 +1,7 @@
 export interface ServiceRequest {
   name: string;
   description: string;
-  icon: string | File;
+  icon: string;
 }
 
 export interface ServiceResponse {

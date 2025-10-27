@@ -24,6 +24,12 @@ import ServiceListPage from "@/pages/services/service-list-page";
 import ServiceCreatePage from "@/pages/services/service-create-page";
 import ServiceEditPage from "@/pages/services/service-edit-page";
 import ServiceDetailPage from "@/pages/services/service-detail-page";
+import PartnerListPage from "@/pages/partners/partner-list-page";
+import PartnerCreatePage from "@/pages/partners/partner-create-page";
+import PartnerEditPage from "@/pages/partners/partner-edit-page";
+import PartnerDetailPage from "@/pages/partners/partner-detail-page";
+import ContactListPage from "@/pages/contacts/contact-list-page";
+import ContactCreatePage from "@/pages/contacts/contact-create-page";
 
 function Dashboard() {
   return (
@@ -101,6 +107,24 @@ function App() {
                 <Route
                   path="/services/detail/:id"
                   element={<ServiceDetailPage />}
+                />
+                <Route path="/partners" element={<PartnerListPage />} />
+                <Route
+                  path="/partners/create"
+                  element={<PartnerCreatePage />}
+                />
+                <Route
+                  path="/partners/edit/:id"
+                  element={<PartnerEditPage />}
+                />
+                <Route
+                  path="/partners/detail/:id"
+                  element={<PartnerDetailPage />}
+                />
+                <Route path="/contacts" element={<ContactListPage />} />
+                <Route
+                  path="/contacts/create"
+                  element={<ContactCreatePage />}
                 />
                 <Route
                   path="/"

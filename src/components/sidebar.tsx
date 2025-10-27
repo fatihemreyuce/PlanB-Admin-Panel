@@ -7,6 +7,8 @@ import {
   UserPlus,
   UsersRound,
   Settings,
+  Building2,
+  Mail,
 } from "lucide-react";
 import { useLoginState } from "@/hooks/use-login-state";
 import { useUserMe } from "@/hooks/use-user";
@@ -52,6 +54,16 @@ export default function Sidebar() {
       icon: Settings,
       path: "/services",
     },
+    {
+      title: "Partnerler",
+      icon: Building2,
+      path: "/partners",
+    },
+    {
+      title: "İletişim",
+      icon: Mail,
+      path: "/contacts",
+    },
   ];
 
   return (
@@ -77,7 +89,11 @@ export default function Sidebar() {
               (item.path === "/team-members" &&
                 location.pathname.startsWith("/team-members")) ||
               (item.path === "/services" &&
-                location.pathname.startsWith("/services"));
+                location.pathname.startsWith("/services")) ||
+              (item.path === "/partners" &&
+                location.pathname.startsWith("/partners")) ||
+              (item.path === "/contacts" &&
+                location.pathname.startsWith("/contacts"));
 
             return (
               <Link
