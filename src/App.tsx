@@ -8,6 +8,10 @@ import UserListPage from "@/pages/users/user-list-page";
 import UserCreatePage from "@/pages/users/user-create-page";
 import UserEditPage from "@/pages/users/user-edit-page";
 import UserDetailPage from "@/pages/users/user-detail-page";
+import NotificationListPage from "@/pages/notifications/notification-list-page";
+import NotificationCreatePage from "@/pages/notifications/notification-create-page";
+import NotificationEditPage from "@/pages/notifications/notification-edit-page";
+import NotificationDetailPage from "@/pages/notifications/notification-detail-page";
 
 function Dashboard() {
   return (
@@ -34,6 +38,22 @@ function App() {
                 <Route path="/users/create" element={<UserCreatePage />} />
                 <Route path="/users/edit/:id" element={<UserEditPage />} />
                 <Route path="/users/detail/:id" element={<UserDetailPage />} />
+                <Route
+                  path="/notifications"
+                  element={<NotificationListPage />}
+                />
+                <Route
+                  path="/notifications/create"
+                  element={<NotificationCreatePage />}
+                />
+                <Route
+                  path="/notifications/edit/:id"
+                  element={<NotificationEditPage />}
+                />
+                <Route
+                  path="/notifications/detail/:id"
+                  element={<NotificationDetailPage />}
+                />
                 <Route
                   path="/"
                   element={<Navigate to="/dashboard" replace />}

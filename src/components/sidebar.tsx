@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, Bell, LogOut } from "lucide-react";
 import { useLoginState } from "@/hooks/use-login-state";
 import { useUserMe } from "@/hooks/use-user";
 
@@ -22,6 +22,11 @@ export default function Sidebar() {
       title: "Kullanıcılar",
       icon: Users,
       path: "/users",
+    },
+    {
+      title: "Bildirimler",
+      icon: Bell,
+      path: "/notifications",
     },
   ];
 

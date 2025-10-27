@@ -7,9 +7,11 @@ import {
   Edit,
   Trash2,
   Mail,
-  User,
+  Bell,
   XCircle,
   AlertTriangle,
+  Send,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,7 +22,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useUsers, useDeleteUser } from "@/hooks/use-user";
+import {
+  useNotifications,
+  useDeleteNotification,
+} from "@/hooks/use-notfications";
+import { fetchClient } from "@/utils/fetch-client";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -29,7 +36,6 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Empty } from "@/components/ui/empty";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Table,
   TableBody,
@@ -39,19 +45,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export default function UserListPage() {
+export default function NotificationListPage() {
   const [searchValue, setSearchValue] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
   const [sort, setSort] = useState("id,desc");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [selectedNotificationId, setSelectedNotificationId] = useState<
+    number | null
+  >(null);
   const [confirmText, setConfirmText] = useState("");
   const [deleteError, setDeleteError] = useState("");
+  const [sendingId, setSendingId] = useState<number | null>(null);
 
-  const { data, isLoading } = useUsers(search, page, size, sort);
-  const deleteUserMutation = useDeleteUser();
+  const { data, isLoading } = useNotifications(page, size, sort);
+  const deleteNotificationMutation = useDeleteNotification();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -62,45 +71,93 @@ export default function UserListPage() {
   }, [searchValue]);
 
   const handleDelete = async () => {
-    if (!selectedUser) return;
+    if (!selectedNotification) return;
 
-    if (confirmText !== selectedUser.username) {
-      setDeleteError(`Lütfen "${selectedUser.username}" yazın`);
+    if (confirmText !== selectedNotification.title) {
+      setDeleteError(`Lütfen "${selectedNotification.title}" yazın`);
       return;
     }
-    if (!selectedUserId) return;
+    if (!selectedNotificationId) return;
 
-    await deleteUserMutation.mutateAsync(selectedUserId);
+    await deleteNotificationMutation.mutateAsync(selectedNotificationId);
     setDeleteModalOpen(false);
-    setSelectedUserId(null);
+    setSelectedNotificationId(null);
     setConfirmText("");
     setDeleteError("");
   };
 
-  const users = data?.content ?? [];
-  const totalElements = data?.totalElements ?? users.length;
+  const handleSendNotification = async (id: number) => {
+    setSendingId(id);
+    try {
+      await fetchClient<void, any>(`/admin/notifications/${id}/send`, {
+        method: "POST",
+      });
+      toast.success("Bildirim başarıyla gönderildi");
+    } catch (error) {
+      console.error("Notification sending error:", error);
+      toast.error("Bildirim gönderilemedi");
+    } finally {
+      setSendingId(null);
+    }
+  };
 
-  // Find selected user for delete modal
-  const selectedUser = users.find((u) => u.id === selectedUserId);
+  const notifications = data?.content ?? [];
+  const totalElements = data?.totalElements ?? notifications.length;
+
+  // Filter notifications based on search
+  const filteredNotifications = search
+    ? notifications.filter(
+        (notification) =>
+          notification.title.toLowerCase().includes(search.toLowerCase()) ||
+          notification.content.toLowerCase().includes(search.toLowerCase()) ||
+          notification.id.toString().includes(search)
+      )
+    : notifications;
+
+  // Find selected notification for delete modal
+  const selectedNotification = notifications.find(
+    (n) => n.id === selectedNotificationId
+  );
 
   return (
     <div className="min-h-screen bg-dashboard-bg-main p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-lg shadow-sm border border-sky-100 overflow-hidden">
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg shadow-sm border border-blue-100 overflow-hidden">
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
-                <div className="p-2 rounded-md bg-sky-400">
-                  <User className="h-5 w-5 text-white" />
+                <div className="p-2 rounded-md bg-blue-500">
+                  <Bell className="h-5 w-5 text-white" />
                 </div>
               </div>
               <div>
                 <p className="text-xs text-slate-600 font-medium mb-1">
-                  Toplam Kullanıcı
+                  Toplam Bildirim
                 </p>
-                <p className="text-2xl font-bold text-sky-600">
+                <p className="text-2xl font-bold text-blue-600">
                   {totalElements}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg shadow-sm border border-purple-100 overflow-hidden">
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="p-2 rounded-md bg-purple-500">
+                  <Mail className="h-5 w-5 text-white" />
+                </div>
+              </div>
+              <div>
+                <p className="text-xs text-slate-600 font-medium mb-1">
+                  Email Bildirim
+                </p>
+                <p className="text-2xl font-bold text-purple-600">
+                  {
+                    filteredNotifications.filter((n) => n.type === "EMAIL")
+                      .length
+                  }
                 </p>
               </div>
             </div>
@@ -109,34 +166,16 @@ export default function UserListPage() {
           <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg shadow-sm border border-emerald-100 overflow-hidden">
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
-                <div className="p-2 rounded-md bg-emerald-400">
-                  <User className="h-5 w-5 text-white" />
+                <div className="p-2 rounded-md bg-emerald-500">
+                  <Send className="h-5 w-5 text-white" />
                 </div>
               </div>
               <div>
                 <p className="text-xs text-slate-600 font-medium mb-1">
-                  Aktif Kullanıcı
+                  Gönderime Hazır
                 </p>
                 <p className="text-2xl font-bold text-emerald-600">
-                  {users.filter((u) => u.active).length}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg shadow-sm border border-amber-100 overflow-hidden">
-            <div className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="p-2 rounded-md bg-amber-400">
-                  <User className="h-5 w-5 text-white" />
-                </div>
-              </div>
-              <div>
-                <p className="text-xs text-slate-600 font-medium mb-1">
-                  Pasif Kullanıcı
-                </p>
-                <p className="text-2xl font-bold text-amber-600">
-                  {users.filter((u) => !u.active).length}
+                  {filteredNotifications.length}
                 </p>
               </div>
             </div>
@@ -150,24 +189,24 @@ export default function UserListPage() {
             <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="p-3 rounded-lg bg-blue-500/80 backdrop-blur-sm">
-                  <User className="h-6 w-6 text-white" />
+                  <Bell className="h-6 w-6 text-white" />
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold text-dashboard-primary mb-1">
-                    Kullanıcılar
+                    Bildirimler
                   </h2>
                   <p className="text-sm text-dashboard-text">
-                    Sistem kullanıcılarını yönetin
+                    Sistem bildirimlerini yönetin
                   </p>
                 </div>
               </div>
-              <Link to="/users/create">
+              <Link to="/notifications/create">
                 <Button
                   size="lg"
                   className="bg-white/0! hover:bg-gray-100 text-planb-green "
                 >
                   <Plus className="h-4 w-4 mr-2 text-planb-green" />
-                  Yeni Kullanıcı
+                  Yeni Bildirim
                 </Button>
               </Link>
             </div>
@@ -179,7 +218,7 @@ export default function UserListPage() {
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-dashboard-text" />
                 <Input
-                  placeholder="Kullanıcı ara..."
+                  placeholder="Bildirim ara..."
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
                   className="pl-10 h-10 bg-dashboard-input"
@@ -209,8 +248,8 @@ export default function UserListPage() {
                 <SelectContent>
                   <SelectItem value="id,desc">En Yeni</SelectItem>
                   <SelectItem value="id,asc">En Eski</SelectItem>
-                  <SelectItem value="username,asc">İsim (A-Z)</SelectItem>
-                  <SelectItem value="username,desc">İsim (Z-A)</SelectItem>
+                  <SelectItem value="title,asc">Başlık (A-Z)</SelectItem>
+                  <SelectItem value="title,desc">Başlık (Z-A)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -222,16 +261,20 @@ export default function UserListPage() {
               <div className="flex items-center justify-center py-20">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-dashboard-primary"></div>
               </div>
-            ) : users.length === 0 ? (
+            ) : filteredNotifications.length === 0 ? (
               <Empty
-                icon={<Search className="h-8 w-8 text-dashboard-text" />}
-                title="Kullanıcı Bulunamadı"
-                description="Arama kriterlerinize uygun kullanıcı bulunamadı"
+                icon={<Bell className="h-8 w-8 text-dashboard-text" />}
+                title="Bildirim Bulunamadı"
+                description={
+                  search
+                    ? "Arama kriterlerinize uygun bildirim bulunamadı"
+                    : "Henüz bildirim bulunmamaktadır"
+                }
                 action={
-                  <Link to="/users/create">
+                  <Link to="/notifications/create">
                     <Button className="bg-white! hover:bg-planb-grey-3! text-planb-main! border-2! border-planb-grey-2! shadow-sm hover:shadow-md transition-all font-semibold px-6 h-11">
                       <Plus className="h-4 w-4 mr-2" />
-                      Yeni Kullanıcı Ekle
+                      Yeni Bildirim Ekle
                     </Button>
                   </Link>
                 }
@@ -241,63 +284,47 @@ export default function UserListPage() {
                 <Table>
                   <TableHeader>
                     <TableRow className="hover:bg-transparent">
-                      <TableHead className="w-[50px]">Avatar</TableHead>
-                      <TableHead className="font-semibold">
-                        Kullanıcı Adı
-                      </TableHead>
-                      <TableHead className="font-semibold">Email</TableHead>
-                      <TableHead className="font-semibold">Durum</TableHead>
-                      <TableHead className="font-semibold">
-                        Oluşturulma
-                      </TableHead>
+                      <TableHead className="font-semibold">ID</TableHead>
+                      <TableHead className="font-semibold">Başlık</TableHead>
+                      <TableHead className="font-semibold">İçerik</TableHead>
+                      <TableHead className="font-semibold">Tür</TableHead>
                       <TableHead className="text-right font-semibold">
                         İşlemler
                       </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {users.map((user) => (
-                      <TableRow key={user.id} className="hover:bg-planb-grey-3">
+                    {filteredNotifications.map((notification) => (
+                      <TableRow
+                        key={notification.id}
+                        className="hover:bg-planb-grey-3"
+                      >
                         <TableCell className="py-3">
-                          <Avatar className="h-10 w-10">
-                            <AvatarFallback className="bg-planb-orange text-white text-xs font-semibold">
-                              {user.username[0].toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
+                          <div className="font-semibold text-sm text-dashboard-primary">
+                            #{notification.id}
+                          </div>
                         </TableCell>
                         <TableCell className="py-3">
                           <div className="font-semibold text-sm text-dashboard-primary">
-                            {user.username}
+                            {notification.title}
                           </div>
                         </TableCell>
                         <TableCell className="py-3">
-                          <div className="flex items-center gap-2 text-xs text-dashboard-text">
-                            <Mail className="h-3 w-3" />
-                            <span>{user.email}</span>
+                          <div className="text-xs text-dashboard-text line-clamp-2">
+                            {notification.content}
                           </div>
                         </TableCell>
                         <TableCell className="py-3">
-                          <Badge
-                            variant={user.active ? "default" : "secondary"}
-                            className={
-                              user.active
-                                ? "bg-green-100 text-green-700 hover:bg-green-100"
-                                : ""
-                            }
-                          >
-                            {user.active ? "Aktif" : "Pasif"}
+                          <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
+                            <Mail className="h-3 w-3 mr-1" />
+                            {notification.type}
                           </Badge>
                         </TableCell>
                         <TableCell className="py-3">
-                          <div className="text-xs text-dashboard-text">
-                            {new Date(user.createdAt).toLocaleDateString(
-                              "tr-TR"
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell className="py-3">
                           <div className="flex items-center justify-end gap-1.5">
-                            <Link to={`/users/detail/${user.id}`}>
+                            <Link
+                              to={`/notifications/detail/${notification.id}`}
+                            >
                               <Button
                                 size="icon"
                                 className="h-8! w-8! bg-white! hover:bg-gray-100! text-blue-600! border-0!"
@@ -305,7 +332,7 @@ export default function UserListPage() {
                                 <Eye className="h-4 w-4 text-blue-600" />
                               </Button>
                             </Link>
-                            <Link to={`/users/edit/${user.id}`}>
+                            <Link to={`/notifications/edit/${notification.id}`}>
                               <Button
                                 size="icon"
                                 className="h-8! w-8! bg-white! hover:bg-gray-100! text-blue-600! border-0!"
@@ -315,8 +342,23 @@ export default function UserListPage() {
                             </Link>
                             <Button
                               size="icon"
+                              onClick={() =>
+                                handleSendNotification(notification.id)
+                              }
+                              disabled={sendingId === notification.id}
+                              className="h-8! w-8! bg-white! hover:bg-gray-100! text-green-600! border-0!"
+                              title="Gönder"
+                            >
+                              {sendingId === notification.id ? (
+                                <Loader2 className="h-4 w-4 text-green-600 animate-spin" />
+                              ) : (
+                                <Send className="h-4 w-4 text-green-600" />
+                              )}
+                            </Button>
+                            <Button
+                              size="icon"
                               onClick={() => {
-                                setSelectedUserId(user.id);
+                                setSelectedNotificationId(notification.id);
                                 setDeleteModalOpen(true);
                               }}
                               className="h-8! w-8! bg-white! hover:bg-gray-100! text-planb-red! border-0!"
@@ -350,7 +392,7 @@ export default function UserListPage() {
                 </div>
                 <div className="flex-1">
                   <DialogTitle className="text-2xl font-bold text-dashboard-primary mb-1.5">
-                    Kullanıcıyı Sil
+                    Bildirimi Sil
                   </DialogTitle>
                   <DialogDescription className="text-sm text-dashboard-text leading-relaxed">
                     Bu işlem geri alınamaz! Lütfen silmek istediğinizden emin
@@ -360,7 +402,7 @@ export default function UserListPage() {
               </div>
 
               {/* Warning Box */}
-              {selectedUser && (
+              {selectedNotification && (
                 <div className="relative bg-white border-2 border-red-200 rounded-sm p-5 mb-6 shadow-sm">
                   <div className="flex items-start gap-4">
                     <div className="p-2 rounded-sm bg-red-50">
@@ -368,13 +410,13 @@ export default function UserListPage() {
                     </div>
                     <div className="flex-1">
                       <h3 className="font-semibold text-dashboard-primary mb-1">
-                        Dikkat! {selectedUser.username} kullanıcısını silmek
+                        Dikkat! {selectedNotification.title} bildirimini silmek
                         üzeresiniz
                       </h3>
                       <p className="text-sm text-dashboard-text leading-relaxed mt-1.5">
-                        Onaylamak için kullanıcı adını yazın:{" "}
+                        Onaylamak için başlığı yazın:{" "}
                         <span className="font-mono font-bold text-dashboard-primary bg-planb-cream px-2 py-0.5 rounded-sm">
-                          {selectedUser.username}
+                          {selectedNotification.title}
                         </span>
                       </p>
                     </div>
@@ -386,13 +428,13 @@ export default function UserListPage() {
               <div className="space-y-2 mb-6">
                 <label className="text-sm font-bold text-dashboard-primary flex items-center gap-2 mb-1">
                   <div className="w-1.5 h-1.5 rounded-full bg-planb-red"></div>
-                  Kullanıcı Adı
+                  Bildirim Başlığı
                 </label>
                 <Input
                   placeholder={
-                    selectedUser
-                      ? `"${selectedUser.username}" yazın`
-                      : "Kullanıcı adını girin..."
+                    selectedNotification
+                      ? `"${selectedNotification.title}" yazın`
+                      : "Başlığı girin..."
                   }
                   value={confirmText}
                   onChange={(e) => {
@@ -414,7 +456,7 @@ export default function UserListPage() {
                 <Button
                   onClick={() => {
                     setDeleteModalOpen(false);
-                    setSelectedUserId(null);
+                    setSelectedNotificationId(null);
                     setConfirmText("");
                     setDeleteError("");
                   }}
@@ -424,10 +466,10 @@ export default function UserListPage() {
                 </Button>
                 <Button
                   onClick={handleDelete}
-                  disabled={deleteUserMutation.isPending}
+                  disabled={deleteNotificationMutation.isPending}
                   className="bg-linear-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white px-8 h-11 font-semibold shadow-lg hover:shadow-xl transition-all"
                 >
-                  {deleteUserMutation.isPending ? (
+                  {deleteNotificationMutation.isPending ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                       Siliniyor...

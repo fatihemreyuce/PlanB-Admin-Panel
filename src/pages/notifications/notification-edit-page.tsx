@@ -3,12 +3,19 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useGetUserById, useUpdateUser } from "@/hooks/use-user";
 import {
-  userUpdateSchema,
-  type UserUpdateFormData,
-} from "@/validations/user.validation";
-import { ArrowLeft, UserCog, User, Mail, KeyRound, Info } from "lucide-react";
+  useGetNotificationById,
+  useUpdateNotification,
+} from "@/hooks/use-notfications";
+import {
+  ArrowLeft,
+  Settings,
+  Bell,
+  Mail,
+  Info,
+  FileText,
+  Type,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   Card,
@@ -17,63 +24,68 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import type { NotificationRequest } from "@/types/notifications.types";
 
-export default function UserEditPage() {
+export default function NotificationEditPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const userId = id ? parseInt(id) : 0;
+  const notificationId = id ? parseInt(id) : 0;
 
-  const { data: user, isLoading } = useGetUserById(userId);
-  const updateUserMutation = useUpdateUser();
+  const { data: notification, isLoading } =
+    useGetNotificationById(notificationId);
+  const updateNotificationMutation = useUpdateNotification();
 
-  const [formData, setFormData] = useState<UserUpdateFormData>({
-    username: "",
-    email: "",
-    password: "",
+  const [formData, setFormData] = useState<NotificationRequest>({
+    title: "",
+    content: "",
+    type: "EMAIL",
   });
-  const [errors, setErrors] = useState<
-    Partial<Record<keyof UserUpdateFormData, string>>
-  >({});
+  const [errors, setErrors] = useState<{
+    title?: string;
+    content?: string;
+  }>({});
 
   useEffect(() => {
-    if (user) {
+    if (notification) {
       setFormData({
-        username: user.username,
-        email: user.email,
-        password: "",
+        title: notification.title,
+        content: notification.content,
+        type: notification.type,
       });
     }
-  }, [user]);
+  }, [notification]);
+
+  const validate = () => {
+    const newErrors: { title?: string; content?: string } = {};
+
+    if (!formData.title.trim()) {
+      newErrors.title = "Başlık gereklidir";
+    }
+
+    if (!formData.content.trim()) {
+      newErrors.content = "İçerik gereklidir";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
 
-    const result = userUpdateSchema.safeParse(formData);
-    if (!result.success) {
-      const fieldErrors: Partial<Record<keyof UserUpdateFormData, string>> = {};
-      result.error.issues.forEach((issue) => {
-        if (issue.path[0]) {
-          fieldErrors[issue.path[0] as keyof UserUpdateFormData] =
-            issue.message;
-        }
-      });
-      setErrors(fieldErrors);
+    if (!validate()) {
       return;
     }
 
     try {
-      await updateUserMutation.mutateAsync({
-        id: userId,
-        request: {
-          username: result.data.username,
-          email: result.data.email,
-          password: result.data.password || "",
-        },
+      await updateNotificationMutation.mutateAsync({
+        id: notificationId,
+        request: formData,
       });
-      navigate("/users");
+      navigate("/notifications");
     } catch (error) {
-      console.error("Kullanıcı güncelleme hatası:", error);
+      console.error("Bildirim güncelleme hatası:", error);
     }
   };
 
@@ -85,12 +97,12 @@ export default function UserEditPage() {
     );
   }
 
-  if (!user) {
+  if (!notification) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-dashboard-bg-main">
         <div className="text-center space-y-4">
-          <p className="text-planb-red font-bold">Kullanıcı bulunamadı</p>
-          <Link to="/users">
+          <p className="text-planb-red font-bold">Bildirim bulunamadı</p>
+          <Link to="/notifications">
             <Button className="bg-white! hover:bg-gray-100! text-dashboard-primary! border-2! border-planb-grey-2!">
               Geri Dön
             </Button>
@@ -105,8 +117,8 @@ export default function UserEditPage() {
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="bg-dashboard-bg-card rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
-          <div className="bg-gradient-to-br from-planb-green to-planb-main p-8">
-            <Link to="/users">
+          <div className="bg-gradient-to-br from-blue-600 to-indigo-600 p-8">
+            <Link to="/notifications">
               <Button
                 size="icon"
                 className="mb-6 !bg-white !text-black hover:!bg-gray-100"
@@ -116,14 +128,14 @@ export default function UserEditPage() {
             </Link>
             <div className="flex items-center gap-4">
               <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-sm">
-                <UserCog className="h-8 w-8 text-white" />
+                <Settings className="h-8 w-8 text-white" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-white mb-2">
-                  Kullanıcı Düzenle
+                  Bildirim Düzenle
                 </h1>
                 <p className="text-white/90">
-                  Kullanıcı bilgilerini güncelleyin
+                  Bildirim bilgilerini güncelleyin
                 </p>
               </div>
             </div>
@@ -136,9 +148,8 @@ export default function UserEditPage() {
             <Info className="h-5 w-5 text-blue-600 mt-0.5" />
             <p className="text-sm text-blue-800">
               <strong className="font-semibold">Güncelleme Notu:</strong>{" "}
-              Kullanıcı bilgilerini güncellemek için tüm alanları doldurmanız
-              gerekmektedir. Şifre alanı zorunludur ve minimum 6 karakter
-              olmalıdır.
+              Bildirim bilgilerini güncellemek için tüm alanları doldurmanız
+              gerekmektedir.
             </p>
           </div>
         </div>
@@ -147,11 +158,11 @@ export default function UserEditPage() {
         <Card className="shadow-lg border-0">
           <CardHeader className="border-b border-planb-grey-2">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-planb-green">
-                <User className="h-5 w-5 text-white" />
+              <div className="p-2 rounded-lg bg-blue-600">
+                <Bell className="h-5 w-5 text-white" />
               </div>
               <div>
-                <CardTitle>Kullanıcı Bilgileri</CardTitle>
+                <CardTitle>Bildirim Bilgileri</CardTitle>
                 <CardDescription>
                   Düzenlemek istediğiniz bilgileri güncelleyin
                 </CardDescription>
@@ -160,86 +171,79 @@ export default function UserEditPage() {
           </CardHeader>
           <CardContent className="p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Username */}
+              {/* Title */}
               <div className="space-y-3">
                 <Label
-                  htmlFor="username"
+                  htmlFor="title"
                   className="flex items-center gap-2 text-base font-semibold"
                 >
-                  <User className="h-4 w-4 text-planb-main" />
-                  Kullanıcı Adı
+                  <Type className="h-4 w-4 text-planb-main" />
+                  Başlık
                 </Label>
                 <Input
-                  id="username"
-                  value={formData.username}
+                  id="title"
+                  value={formData.title}
                   onChange={(e) =>
-                    setFormData({ ...formData, username: e.target.value })
+                    setFormData({ ...formData, title: e.target.value })
                   }
-                  placeholder="Örn: john_doe"
+                  placeholder="Örn: Yeni Özellik Duyurusu"
                   className="h-12 text-base"
                 />
-                {errors.username && (
+                {errors.title && (
                   <p className="text-sm text-planb-red font-medium">
-                    {errors.username}
+                    {errors.title}
                   </p>
                 )}
               </div>
 
-              {/* Email */}
+              {/* Content */}
               <div className="space-y-3">
                 <Label
-                  htmlFor="email"
+                  htmlFor="content"
+                  className="flex items-center gap-2 text-base font-semibold"
+                >
+                  <FileText className="h-4 w-4 text-planb-main" />
+                  İçerik
+                </Label>
+                <textarea
+                  id="content"
+                  value={formData.content}
+                  onChange={(e) =>
+                    setFormData({ ...formData, content: e.target.value })
+                  }
+                  placeholder="Bildirim içeriğini buraya yazın..."
+                  className="w-full min-h-[150px] px-4 py-3 text-base border border-planb-grey-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-planb-main"
+                />
+                {errors.content && (
+                  <p className="text-sm text-planb-red font-medium">
+                    {errors.content}
+                  </p>
+                )}
+              </div>
+
+              {/* Type */}
+              <div className="space-y-3">
+                <Label
+                  htmlFor="type"
                   className="flex items-center gap-2 text-base font-semibold"
                 >
                   <Mail className="h-4 w-4 text-planb-main" />
-                  Email Adresi
+                  Bildirim Türü
                 </Label>
                 <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  placeholder="Örn: john@example.com"
-                  className="h-12 text-base"
+                  id="type"
+                  value={formData.type}
+                  disabled
+                  className="h-12 text-base bg-dashboard-input"
                 />
-                {errors.email && (
-                  <p className="text-sm text-planb-red font-medium">
-                    {errors.email}
-                  </p>
-                )}
-              </div>
-
-              {/* Password */}
-              <div className="space-y-3">
-                <Label
-                  htmlFor="password"
-                  className="flex items-center gap-2 text-base font-semibold"
-                >
-                  <KeyRound className="h-4 w-4 text-planb-main" />
-                  Yeni Şifre
-                </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
-                  placeholder="Yeni şifre girin (minimum 6 karakter)"
-                  className="h-12 text-base"
-                />
-                {errors.password && (
-                  <p className="text-sm text-planb-red font-medium">
-                    {errors.password}
-                  </p>
-                )}
+                <p className="text-xs text-dashboard-text">
+                  Şu anda sadece Email bildirimleri desteklenmektedir.
+                </p>
               </div>
 
               {/* Buttons */}
               <div className="flex justify-end gap-4 pt-6 border-t border-planb-grey-2">
-                <Link to="/users">
+                <Link to="/notifications">
                   <Button
                     type="button"
                     className="px-8 h-11 font-semibold bg-white! hover:bg-planb-grey-3! text-planb-main! border-2! border-planb-grey-2! shadow-sm hover:shadow-md transition-all"
@@ -249,17 +253,17 @@ export default function UserEditPage() {
                 </Link>
                 <Button
                   type="submit"
-                  disabled={updateUserMutation.isPending}
-                  className="bg-gradient-to-r from-planb-green to-planb-main hover:shadow-lg text-white px-8 h-11 font-semibold"
+                  disabled={updateNotificationMutation.isPending}
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:shadow-lg text-white px-8 h-11 font-semibold"
                 >
-                  {updateUserMutation.isPending ? (
+                  {updateNotificationMutation.isPending ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                       Güncelleniyor...
                     </>
                   ) : (
                     <>
-                      <UserCog className="h-4 w-4 mr-2" />
+                      <Settings className="h-4 w-4 mr-2" />
                       Değişiklikleri Kaydet
                     </>
                   )}

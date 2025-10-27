@@ -234,12 +234,12 @@ export default function UserDetailPage() {
         {/* Actions */}
         <div className="flex justify-end gap-4">
           <Link to="/users">
-            <Button className="bg-slate-600 hover:bg-slate-700 text-white shadow-sm">
+            <Button className="h-12 px-6 bg-white! hover:bg-planb-grey-3! text-planb-main! border-2! border-planb-grey-2! shadow-sm hover:shadow-md transition-all font-semibold">
               Geri Dön
             </Button>
           </Link>
           <Link to={`/users/edit/${user.id}`}>
-            <Button className="bg-blue-500 hover:bg-blue-600 text-white shadow-sm">
+            <Button className="h-12 px-6 bg-gradient-to-r from-planb-green to-planb-main! hover:from-planb-green! hover:to-planb-chocolate! text-white! shadow-sm hover:shadow-lg transition-all font-semibold">
               <Edit className="h-4 w-4 mr-2" />
               Düzenle
             </Button>
