@@ -8,14 +8,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Users, Mail, Linkedin, Hash } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useGetTeamMemberById } from "@/hooks/use-team-members";
+import { ArrowLeft, Settings, Hash } from "lucide-react";
+import { useServiceById } from "@/hooks/use-service";
 
-export default function TeamMembersDetailPage() {
+export default function ServiceDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const memberId = id ? parseInt(id) : 0;
-  const { data: member, isLoading } = useGetTeamMemberById(memberId);
+  const serviceId = id ? parseInt(id) : 0;
+  const { data: service, isLoading } = useServiceById(serviceId);
 
   if (isLoading) {
     return (
@@ -25,18 +24,18 @@ export default function TeamMembersDetailPage() {
     );
   }
 
-  if (!member) {
+  if (!service) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-dashboard-bg-main">
         <Card>
           <CardHeader>
-            <CardTitle>Üye Bulunamadı</CardTitle>
+            <CardTitle>Servis Bulunamadı</CardTitle>
             <CardDescription>
-              Belirtilen ID'ye sahip bir üye bulunamadı.
+              Belirtilen ID'ye sahip bir servis bulunamadı.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Link to="/team-members">
+            <Link to="/services">
               <Button>Listeye Dön</Button>
             </Link>
           </CardContent>
@@ -51,7 +50,7 @@ export default function TeamMembersDetailPage() {
         {/* Header */}
         <div className="bg-dashboard-bg-card rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
           <div className="bg-gradient-to-br from-sky-600 to-blue-600 p-8">
-            <Link to="/team-members">
+            <Link to="/services">
               <Button
                 size="icon"
                 className="mb-6 !bg-white !text-black hover:!bg-gray-100"
@@ -61,26 +60,13 @@ export default function TeamMembersDetailPage() {
             </Link>
             <div className="flex items-center gap-4">
               <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-sm">
-                <Avatar className="h-20 w-20">
-                  <AvatarImage
-                    src={
-                      member.profilePhoto && member.profilePhoto.trim() !== ""
-                        ? member.profilePhoto.startsWith("http")
-                          ? member.profilePhoto
-                          : `/api/v1/files/${member.profilePhoto}`
-                        : undefined
-                    }
-                  />
-                  <AvatarFallback className="bg-white text-sky-600 text-2xl font-bold">
-                    {member.name[0].toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
+                <Settings className="h-20 w-20 text-white" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-white mb-2">
-                  {member.name}
+                  {service.name}
                 </h1>
-                <p className="text-white/90">{member.title}</p>
+                <p className="text-white/90">{service.description}</p>
               </div>
             </div>
           </div>
@@ -90,7 +76,7 @@ export default function TeamMembersDetailPage() {
         <Card className="shadow-lg border-planb-grey-2">
           <CardHeader>
             <CardTitle>Bilgiler</CardTitle>
-            <CardDescription>Üye detay bilgileri</CardDescription>
+            <CardDescription>Servis detay bilgileri</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* ID */}
@@ -100,10 +86,10 @@ export default function TeamMembersDetailPage() {
               </div>
               <div>
                 <p className="text-sm text-dashboard-text font-medium">
-                  Üye ID
+                  Servis ID
                 </p>
                 <p className="text-lg font-semibold text-dashboard-primary">
-                  {member.id}
+                  {service.id}
                 </p>
               </div>
             </div>
@@ -111,76 +97,55 @@ export default function TeamMembersDetailPage() {
             {/* Name */}
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
-                <Users className="h-4 w-4 text-sky-600" />
+                <Settings className="h-4 w-4 text-sky-600" />
                 İsim
               </Label>
               <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <p className="text-lg font-semibold text-dashboard-primary">
-                  {member.name}
+                  {service.name}
                 </p>
               </div>
             </div>
 
-            {/* Title */}
+            {/* Description */}
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
-                <Users className="h-4 w-4 text-purple-600" />
-                Ünvan
+                <Settings className="h-4 w-4 text-purple-600" />
+                Açıklama
               </Label>
               <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
                 <p className="text-lg font-semibold text-dashboard-primary">
-                  {member.title}
+                  {service.description}
                 </p>
               </div>
             </div>
 
-            {/* Quote */}
+            {/* Icon */}
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-emerald-600" />
-                Alıntı
+                <Settings className="h-4 w-4 text-emerald-600" />
+                İkon
               </Label>
               <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
-                <p className="text-lg font-semibold text-dashboard-primary">
-                  "{member.quote}"
-                </p>
-              </div>
-            </div>
-
-            {/* Order Number */}
-            <div className="space-y-2">
-              <Label className="flex items-center gap-2">
-                <Hash className="h-4 w-4 text-amber-600" />
-                Sıra Numarası
-              </Label>
-              <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
-                <Badge className="bg-amber-500 text-white">
-                  {member.orderNumber}
-                </Badge>
-              </div>
-            </div>
-
-            {/* LinkedIn */}
-            <div className="space-y-2">
-              <Label className="flex items-center gap-2">
-                <Linkedin className="h-4 w-4 text-blue-600" />
-                LinkedIn URL
-              </Label>
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <a
-                  href={member.linkedinUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
-                >
-                  {member.linkedinUrl}
-                </a>
+                {service.icon ? (
+                  <img
+                    src={
+                      service.icon && service.icon.startsWith("http")
+                        ? service.icon
+                        : `/api/v1/files/${service.icon}`
+                    }
+                    alt={service.name}
+                    className="max-w-full max-h-48 rounded-lg object-cover"
+                  />
+                ) : (
+                  <Badge className="bg-emerald-500 text-white">İkon yok</Badge>
+                )}
               </div>
             </div>
 
             {/* Actions */}
             <div className="flex justify-end gap-4 pt-4">
-              <Link to="/team-members">
+              <Link to="/services">
                 <Button className="h-12 px-8 bg-white! hover:bg-planb-grey-3! text-planb-main! border-2! border-planb-grey-2! shadow-sm hover:shadow-md transition-all font-semibold">
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Geri Dön

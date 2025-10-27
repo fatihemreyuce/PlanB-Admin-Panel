@@ -214,9 +214,15 @@ export default function TeamMembersListPage() {
                   <SelectItem value="100">100 / sayfa</SelectItem>
                 </SelectContent>
               </Select>
-              <Select value={sort} onValueChange={(value) => setSort(value)}>
+              <Select
+                value={sort}
+                onValueChange={(value) => {
+                  setSort(value);
+                  setPage(0);
+                }}
+              >
                 <SelectTrigger className="w-full md:w-40 h-10 border-0! bg-white! text-dashboard-primary">
-                  <SelectValue />
+                  <SelectValue placeholder="Sıralama seçin" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="orderNumber,asc">
@@ -278,7 +284,16 @@ export default function TeamMembersListPage() {
                       >
                         <TableCell className="py-3">
                           <Avatar className="h-10 w-10">
-                            <AvatarImage src={member.profilePhoto} />
+                            <AvatarImage
+                              src={
+                                member.profilePhoto &&
+                                member.profilePhoto.trim() !== ""
+                                  ? member.profilePhoto.startsWith("http")
+                                    ? member.profilePhoto
+                                    : `/api/v1/files/${member.profilePhoto}`
+                                  : undefined
+                              }
+                            />
                             <AvatarFallback className="bg-planb-orange text-white text-xs font-semibold">
                               {member.name[0].toUpperCase()}
                             </AvatarFallback>
@@ -312,9 +327,9 @@ export default function TeamMembersListPage() {
                             <Link to={`/team-members/edit/${member.id}`}>
                               <Button
                                 size="icon"
-                                className="h-8! w-8! bg-blue-100! hover:bg-blue-200! text-blue-600! border-0! rounded-full shadow-sm hover:shadow-md transition-all"
+                                className="h-8! w-8! bg-emerald-100! hover:bg-emerald-200! text-emerald-600! border-0! rounded-full shadow-sm hover:shadow-md transition-all"
                               >
-                                <Edit className="h-4 w-4 text-blue-600" />
+                                <Edit className="h-4 w-4 text-emerald-600" />
                               </Button>
                             </Link>
                             <Button

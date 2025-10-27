@@ -4,7 +4,7 @@ export interface TeamMemberRequest {
   quote: string;
   linkedinUrl: string;
   orderNumber: number;
-  profilePhoto: string;
+  profilePhoto: string | File;
 }
 
 export interface TeamMemberResponse {

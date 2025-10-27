@@ -51,7 +51,15 @@ export default function TeamMembersEditPage() {
       setLinkedinUrl(member.linkedinUrl);
       setOrderNumber(member.orderNumber);
       setProfilePhoto(member.profilePhoto);
-      setPreview(member.profilePhoto);
+      // Set preview with correct URL format
+      if (member.profilePhoto && member.profilePhoto.trim() !== "") {
+        const photoUrl = member.profilePhoto.startsWith("http")
+          ? member.profilePhoto
+          : `/api/v1/files/${member.profilePhoto}`;
+        setPreview(photoUrl);
+      } else {
+        setPreview(null);
+      }
     }
   }, [member]);
 
@@ -93,7 +101,15 @@ export default function TeamMembersEditPage() {
 
   const handleRemove = () => {
     setProfilePhotoFile(null);
-    setPreview(null);
+    // Reset preview to original photo or null
+    if (member?.profilePhoto && member.profilePhoto.trim() !== "") {
+      const photoUrl = member.profilePhoto.startsWith("http")
+        ? member.profilePhoto
+        : `/api/v1/files/${member.profilePhoto}`;
+      setPreview(photoUrl);
+    } else {
+      setPreview(null);
+    }
     setProfilePhoto("");
     if (inputRef.current) inputRef.current.value = "";
   };
@@ -113,8 +129,13 @@ export default function TeamMembersEditPage() {
       quote,
       linkedinUrl: linkedinUrl || "",
       orderNumber,
-      profilePhoto: "", // Şimdilik boş string gönderiyoruz
+      profilePhoto: profilePhotoFile || "",
     };
+
+    // Remove profilePhoto if no new file is selected (to keep existing photo)
+    if (!profilePhotoFile) {
+      delete (request as any).profilePhoto;
+    }
 
     try {
       await updateMemberMutation.mutateAsync(request);

@@ -1,13 +1,6 @@
 import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  ArrowLeft,
-  UserPlus,
-  Users,
-  Upload,
-  X,
-  Image as ImageIcon,
-} from "lucide-react";
+import { Plus, Settings, Upload, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,54 +11,31 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useCreateTeamMember } from "@/hooks/use-team-members";
-import type { TeamMemberRequest } from "@/types/team-members.types";
+import { useCreateService } from "@/hooks/use-service";
+import type { ServiceRequest } from "@/types/service.types";
 
-export default function TeamMembersCreatePage() {
+export default function ServiceCreatePage() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
-  const [title, setTitle] = useState("");
-  const [quote, setQuote] = useState("");
-  const [linkedinUrl, setLinkedinUrl] = useState("");
-  const [orderNumber, setOrderNumber] = useState(1);
-  const [profilePhoto, setProfilePhoto] = useState("");
-  const [profilePhotoFile, setProfilePhotoFile] = useState<File | null>(null);
+  const [description, setDescription] = useState("");
+  const [iconFile, setIconFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const createMemberMutation = useCreateTeamMember();
+  const createServiceMutation = useCreateService();
 
   const handleFile = (file: File) => {
     if (file.size > 5 * 1024 * 1024) {
       alert("Dosya boyutu 5MB'dan büyük olamaz");
       return;
     }
-    setProfilePhotoFile(file);
+    setIconFile(file);
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreview(reader.result as string);
-      setProfilePhoto(reader.result as string);
     };
     reader.readAsDataURL(file);
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    const file = e.dataTransfer.files[0];
-    if (file) handleFile(file);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,9 +44,8 @@ export default function TeamMembersCreatePage() {
   };
 
   const handleRemove = () => {
-    setProfilePhotoFile(null);
+    setIconFile(null);
     setPreview(null);
-    setProfilePhoto("");
     if (inputRef.current) inputRef.current.value = "";
   };
 
@@ -84,30 +53,28 @@ export default function TeamMembersCreatePage() {
     e.preventDefault();
     setError("");
 
-    if (!name.trim() || !title.trim() || !quote.trim()) {
+    if (!name.trim() || !description.trim()) {
       setError("Lütfen tüm zorunlu alanları doldurun");
       return;
     }
 
-    const request: TeamMemberRequest = {
-      name,
-      title,
-      quote,
-      linkedinUrl: linkedinUrl || "",
-      orderNumber,
-      profilePhoto: profilePhotoFile || "",
-    };
-
-    // Remove profilePhoto if it's empty string
-    if (!profilePhotoFile) {
-      delete (request as any).profilePhoto;
+    if (!iconFile) {
+      setError("Lütfen bir ikon dosyası seçin");
+      return;
     }
 
+    const request: ServiceRequest = {
+      name,
+      description,
+      icon: iconFile,
+    };
+
     try {
-      await createMemberMutation.mutateAsync(request);
-      navigate("/team-members");
+      await createServiceMutation.mutateAsync(request);
+      navigate("/services");
     } catch (error) {
-      console.error("Error creating team member:", error);
+      console.error("Error creating service:", error);
+      setError("Servis oluşturulurken bir hata oluştu");
     }
   };
 
@@ -119,13 +86,13 @@ export default function TeamMembersCreatePage() {
           <div className="bg-gradient-to-br from-sky-600 to-blue-600 p-8">
             <div className="flex items-center gap-4">
               <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-sm">
-                <UserPlus className="h-8 w-8 text-white" />
+                <Settings className="h-8 w-8 text-white" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-white mb-2">
-                  Yeni Takım Üyesi
+                  Yeni Servis
                 </h1>
-                <p className="text-white/90">Yeni bir takım üyesi ekleyin</p>
+                <p className="text-white/90">Yeni bir servis ekleyin</p>
               </div>
             </div>
           </div>
@@ -135,7 +102,7 @@ export default function TeamMembersCreatePage() {
         <Card className="shadow-lg border-planb-grey-2">
           <CardHeader>
             <CardTitle>Bilgiler</CardTitle>
-            <CardDescription>Takım üyesi bilgilerini girin</CardDescription>
+            <CardDescription>Servis bilgilerini girin</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -154,76 +121,31 @@ export default function TeamMembersCreatePage() {
                   id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="İsim girin..."
+                  placeholder="Servis ismini girin..."
                   className="h-12"
                 />
               </div>
 
-              {/* Title */}
+              {/* Description */}
               <div className="space-y-2">
-                <Label htmlFor="title">
-                  Ünvan <span className="text-red-500">*</span>
+                <Label htmlFor="description">
+                  Açıklama <span className="text-red-500">*</span>
                 </Label>
                 <Input
-                  id="title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Ünvan girin..."
+                  id="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Servis açıklamasını girin..."
                   className="h-12"
                 />
               </div>
 
-              {/* Quote */}
+              {/* Icon */}
               <div className="space-y-2">
-                <Label htmlFor="quote">
-                  Alıntı <span className="text-red-500">*</span>
+                <Label htmlFor="icon">
+                  İkon <span className="text-red-500">*</span>
                 </Label>
-                <Input
-                  id="quote"
-                  value={quote}
-                  onChange={(e) => setQuote(e.target.value)}
-                  placeholder="Alıntı girin..."
-                  className="h-12"
-                />
-              </div>
-
-              {/* LinkedIn URL */}
-              <div className="space-y-2">
-                <Label htmlFor="linkedinUrl">LinkedIn URL</Label>
-                <Input
-                  id="linkedinUrl"
-                  value={linkedinUrl}
-                  onChange={(e) => setLinkedinUrl(e.target.value)}
-                  placeholder="LinkedIn URL girin..."
-                  className="h-12"
-                />
-              </div>
-
-              {/* Order Number */}
-              <div className="space-y-2">
-                <Label htmlFor="orderNumber">Sıra Numarası</Label>
-                <Input
-                  id="orderNumber"
-                  type="number"
-                  value={orderNumber}
-                  onChange={(e) => setOrderNumber(parseInt(e.target.value))}
-                  className="h-12"
-                />
-              </div>
-
-              {/* Profile Photo */}
-              <div className="space-y-2">
-                <Label>Profil Fotoğrafı</Label>
-                <div
-                  className={`relative border-2 border-dashed rounded-lg transition-colors ${
-                    isDragging
-                      ? "border-blue-500 bg-blue-50"
-                      : "border-gray-300 hover:border-gray-400"
-                  }`}
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
-                >
+                <div className="relative border-2 border-dashed rounded-lg transition-colors border-gray-300 hover:border-gray-400">
                   <input
                     ref={inputRef}
                     type="file"
@@ -261,7 +183,7 @@ export default function TeamMembersCreatePage() {
                         </div>
                         <div>
                           <p className="text-sm font-medium text-gray-700">
-                            Fotoğrafı sürükleyip bırakın veya tıklayın
+                            İkonu sürükleyip bırakın veya tıklayın
                           </p>
                           <p className="text-xs text-gray-500 mt-1">
                             PNG, JPG, GIF (Max 5MB)
@@ -271,20 +193,11 @@ export default function TeamMembersCreatePage() {
                     )}
                   </div>
                 </div>
-                {profilePhotoFile && (
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <ImageIcon className="h-4 w-4" />
-                    <span className="truncate">{profilePhotoFile.name}</span>
-                    <span className="text-gray-400">
-                      ({(profilePhotoFile.size / 1024).toFixed(1)} KB)
-                    </span>
-                  </div>
-                )}
               </div>
 
               {/* Actions */}
               <div className="flex justify-end gap-4 pt-4">
-                <Link to="/team-members">
+                <Link to="/services">
                   <Button
                     type="button"
                     className="h-12 px-8 bg-white! hover:bg-planb-grey-3! text-planb-main! border-2! border-planb-grey-2! shadow-sm hover:shadow-md transition-all font-semibold"
@@ -294,17 +207,17 @@ export default function TeamMembersCreatePage() {
                 </Link>
                 <Button
                   type="submit"
-                  disabled={createMemberMutation.isPending}
+                  disabled={createServiceMutation.isPending}
                   className="h-12 px-8 font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
                 >
-                  {createMemberMutation.isPending ? (
+                  {createServiceMutation.isPending ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                       Oluşturuluyor...
                     </>
                   ) : (
                     <>
-                      <UserPlus className="h-4 w-4 mr-2" />
+                      <Plus className="h-4 w-4 mr-2" />
                       Oluştur
                     </>
                   )}

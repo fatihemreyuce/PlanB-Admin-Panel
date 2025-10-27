@@ -6,6 +6,7 @@ import {
   LogOut,
   UserPlus,
   UsersRound,
+  Settings,
 } from "lucide-react";
 import { useLoginState } from "@/hooks/use-login-state";
 import { useUserMe } from "@/hooks/use-user";
@@ -46,6 +47,11 @@ export default function Sidebar() {
       icon: UsersRound,
       path: "/team-members",
     },
+    {
+      title: "Servisler",
+      icon: Settings,
+      path: "/services",
+    },
   ];
 
   return (
@@ -69,7 +75,9 @@ export default function Sidebar() {
               (item.path === "/notifications" &&
                 location.pathname.startsWith("/notifications")) ||
               (item.path === "/team-members" &&
-                location.pathname.startsWith("/team-members"));
+                location.pathname.startsWith("/team-members")) ||
+              (item.path === "/services" &&
+                location.pathname.startsWith("/services"));
 
             return (
               <Link

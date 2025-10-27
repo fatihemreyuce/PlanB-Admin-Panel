@@ -20,7 +20,7 @@ export const createTeamMember = (request: TeamMemberRequest) => {
 
 export const getTeamMembers = (page: number, size: number, sort: string) => {
   return fetchClient<void, Page<TeamMemberResponse>>(
-    `/team-members?page=${page}&size=${size}&sort=${sort}`,
+    `/team-members?page=${page}&size=${size}&sort=${encodeURIComponent(sort)}`,
     {
       method: "GET",
     }

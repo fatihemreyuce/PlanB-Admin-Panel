@@ -20,6 +20,10 @@ import TeamMembersListPage from "@/pages/team-members/team-members-list-page";
 import TeamMembersCreatePage from "@/pages/team-members/team-members-create-page";
 import TeamMembersEditPage from "@/pages/team-members/team-members-edit-page";
 import TeamMembersDetailPage from "@/pages/team-members/team-members-detail-page";
+import ServiceListPage from "@/pages/services/service-list-page";
+import ServiceCreatePage from "@/pages/services/service-create-page";
+import ServiceEditPage from "@/pages/services/service-edit-page";
+import ServiceDetailPage from "@/pages/services/service-detail-page";
 
 function Dashboard() {
   return (
@@ -84,6 +88,19 @@ function App() {
                 <Route
                   path="/team-members/detail/:id"
                   element={<TeamMembersDetailPage />}
+                />
+                <Route path="/services" element={<ServiceListPage />} />
+                <Route
+                  path="/services/create"
+                  element={<ServiceCreatePage />}
+                />
+                <Route
+                  path="/services/edit/:id"
+                  element={<ServiceEditPage />}
+                />
+                <Route
+                  path="/services/detail/:id"
+                  element={<ServiceDetailPage />}
                 />
                 <Route
                   path="/"

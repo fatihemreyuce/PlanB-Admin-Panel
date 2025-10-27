@@ -335,9 +335,9 @@ export default function NotificationListPage() {
                             <Link to={`/notifications/edit/${notification.id}`}>
                               <Button
                                 size="icon"
-                                className="h-8! w-8! bg-blue-100! hover:bg-blue-200! text-blue-600! border-0! rounded-full shadow-sm hover:shadow-md transition-all"
+                                className="h-8! w-8! bg-emerald-100! hover:bg-emerald-200! text-emerald-600! border-0! rounded-full shadow-sm hover:shadow-md transition-all"
                               >
-                                <Edit className="h-4 w-4 text-blue-600" />
+                                <Edit className="h-4 w-4 text-emerald-600" />
                               </Button>
                             </Link>
                             <Button
@@ -346,13 +346,13 @@ export default function NotificationListPage() {
                                 handleSendNotification(notification.id)
                               }
                               disabled={sendingId === notification.id}
-                              className="h-8! w-8! bg-green-100! hover:bg-green-200! text-green-600! border-0! rounded-full shadow-sm hover:shadow-md transition-all"
+                              className="h-8! w-8! bg-purple-100! hover:bg-purple-200! text-purple-600! border-0! rounded-full shadow-sm hover:shadow-md transition-all"
                               title="Gönder"
                             >
                               {sendingId === notification.id ? (
-                                <Loader2 className="h-4 w-4 text-green-600 animate-spin" />
+                                <Loader2 className="h-4 w-4 text-purple-600 animate-spin" />
                               ) : (
-                                <Send className="h-4 w-4 text-green-600" />
+                                <Send className="h-4 w-4 text-purple-600" />
                               )}
                             </Button>
                             <Button
