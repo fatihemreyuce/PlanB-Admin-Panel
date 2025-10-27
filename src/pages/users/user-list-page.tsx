@@ -146,17 +146,17 @@ export default function UserListPage() {
         {/* Main Card */}
         <div className="bg-dashboard-bg-card rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-br from-sky-200 to-blue-300 p-5">
+          <div className="bg-gradient-linear-5 p-5">
             <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="p-3 rounded-lg bg-blue-500/80 backdrop-blur-sm">
                   <User className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-slate-700 mb-1">
+                  <h2 className="text-2xl font-bold text-dashboard-primary mb-1">
                     Kullanıcılar
                   </h2>
-                  <p className="text-sm text-slate-600">
+                  <p className="text-sm text-dashboard-text">
                     Sistem kullanıcılarını yönetin
                   </p>
                 </div>
@@ -164,9 +164,9 @@ export default function UserListPage() {
               <Link to="/users/create">
                 <Button
                   size="lg"
-                  className="bg-white/20 hover:bg-white/30 text-white border border-white/30 shadow-sm backdrop-blur-sm"
+                  className="bg-white/0! hover:bg-gray-100 text-planb-green "
                 >
-                  <Plus className="h-4 w-4 mr-2 text-white" />
+                  <Plus className="h-4 w-4 mr-2 text-planb-green" />
                   Yeni Kullanıcı
                 </Button>
               </Link>

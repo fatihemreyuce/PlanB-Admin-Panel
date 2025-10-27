@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  darkMode: ["class"],
+  darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
@@ -50,6 +50,11 @@ const config: Config = {
           3: "var(--chart-3)",
           4: "var(--chart-4)",
           5: "var(--chart-5)",
+          orange: "var(--chart-orange)",
+          "dark-orange": "var(--chart-dark-orange)",
+          brown: "var(--chart-brown)",
+          "light-grey": "var(--chart-light-grey)",
+          "muted-brown": "var(--chart-muted-brown)",
         },
         planb: {
           main: "var(--planb-main)",
@@ -83,13 +88,6 @@ const config: Config = {
           "bg-card": "var(--dashboard-bg-card)",
           input: "var(--dashboard-input)",
           logout: "var(--dashboard-logout)",
-        },
-        chart: {
-          orange: "var(--chart-orange)",
-          "dark-orange": "var(--chart-dark-orange)",
-          brown: "var(--chart-brown)",
-          "light-grey": "var(--chart-light-grey)",
-          "muted-brown": "var(--chart-muted-brown)",
         },
       },
       backgroundImage: {
