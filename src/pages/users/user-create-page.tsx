@@ -64,10 +64,10 @@ export default function UserCreatePage() {
   };
 
   return (
-    <div className="min-h-screen bg-planb-background p-6">
+    <div className="min-h-screen bg-dashboard-bg-main p-6">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
-        <div className="bg-white rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
+        <div className="bg-dashboard-bg-card rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
           <div className="bg-gradient-to-br from-planb-main to-planb-chocolate p-8">
             <Link to="/users">
               <Button
@@ -203,9 +203,8 @@ export default function UserCreatePage() {
               <div className="flex justify-end gap-4 pt-6 border-t border-planb-grey-2">
                 <Link to="/users">
                   <Button
-                    variant="outline"
+                    className="px-8 h-11 font-semibold bg-slate-600 hover:bg-slate-700 text-white shadow-sm"
                     type="button"
-                    className="px-8 h-11 font-semibold"
                   >
                     İptal
                   </Button>

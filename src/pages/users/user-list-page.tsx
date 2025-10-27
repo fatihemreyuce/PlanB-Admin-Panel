@@ -79,86 +79,94 @@ export default function UserListPage() {
 
   const users = data?.content ?? [];
   const totalElements = data?.totalElements ?? users.length;
-  const totalPages =
-    data?.totalPages ??
-    (totalElements > 0 ? Math.ceil(totalElements / size) : 0);
 
   // Find selected user for delete modal
   const selectedUser = users.find((u) => u.id === selectedUserId);
 
   return (
-    <div className="min-h-screen bg-planb-background p-6">
+    <div className="min-h-screen bg-dashboard-bg-main p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white rounded-xl shadow-sm border border-planb-grey-2 p-6">
-            <div className="flex items-center justify-between">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="bg-gradient-to-br from-sky-50 to-blue-50 rounded-lg shadow-sm border border-sky-100 overflow-hidden">
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="p-2 rounded-md bg-sky-400">
+                  <User className="h-5 w-5 text-white" />
+                </div>
+              </div>
               <div>
-                <p className="text-sm text-planb-grey-1 font-medium mb-1">
+                <p className="text-xs text-slate-600 font-medium mb-1">
                   Toplam Kullanıcı
                 </p>
-                <p className="text-2xl font-bold text-planb-main">
+                <p className="text-2xl font-bold text-sky-600">
                   {totalElements}
                 </p>
               </div>
-              <div className="p-3 rounded-lg bg-planb-cream">
-                <User className="h-6 w-6 text-planb-orange" />
-              </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border border-planb-grey-2 p-6">
-            <div className="flex items-center justify-between">
+          <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg shadow-sm border border-emerald-100 overflow-hidden">
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="p-2 rounded-md bg-emerald-400">
+                  <User className="h-5 w-5 text-white" />
+                </div>
+              </div>
               <div>
-                <p className="text-sm text-planb-grey-1 font-medium mb-1">
+                <p className="text-xs text-slate-600 font-medium mb-1">
                   Aktif Kullanıcı
                 </p>
-                <p className="text-2xl font-bold text-planb-green">
+                <p className="text-2xl font-bold text-emerald-600">
                   {users.filter((u) => u.active).length}
                 </p>
               </div>
-              <div className="p-3 rounded-lg bg-green-50">
-                <User className="h-6 w-6 text-planb-green" />
-              </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border border-planb-grey-2 p-6">
-            <div className="flex items-center justify-between">
+          <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg shadow-sm border border-amber-100 overflow-hidden">
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="p-2 rounded-md bg-amber-400">
+                  <User className="h-5 w-5 text-white" />
+                </div>
+              </div>
               <div>
-                <p className="text-sm text-planb-grey-1 font-medium mb-1">
+                <p className="text-xs text-slate-600 font-medium mb-1">
                   Pasif Kullanıcı
                 </p>
-                <p className="text-2xl font-bold text-planb-chocolate">
+                <p className="text-2xl font-bold text-amber-600">
                   {users.filter((u) => !u.active).length}
                 </p>
-              </div>
-              <div className="p-3 rounded-lg bg-orange-50">
-                <User className="h-6 w-6 text-planb-chocolate" />
               </div>
             </div>
           </div>
         </div>
 
         {/* Main Card */}
-        <div className="bg-white rounded-xl shadow-sm border border-planb-grey-2">
+        <div className="bg-dashboard-bg-card rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
           {/* Header */}
-          <div className="p-6 border-b border-planb-grey-2">
+          <div className="bg-gradient-to-br from-sky-200 to-blue-300 p-5">
             <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-planb-main">
-                  Kullanıcılar
-                </h2>
-                <p className="text-sm text-planb-grey-1 mt-1">
-                  Sistem kullanıcılarını yönetin
-                </p>
+              <div className="flex items-center gap-3">
+                <div className="p-3 rounded-lg bg-blue-500/80 backdrop-blur-sm">
+                  <User className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-slate-700 mb-1">
+                    Kullanıcılar
+                  </h2>
+                  <p className="text-sm text-slate-600">
+                    Sistem kullanıcılarını yönetin
+                  </p>
+                </div>
               </div>
               <Link to="/users/create">
                 <Button
                   size="lg"
-                  className="bg-planb-main hover:bg-planb-chocolate text-white"
+                  className="bg-white/20 hover:bg-white/30 text-white border border-white/30 shadow-sm backdrop-blur-sm"
                 >
-                  <Plus className="h-4 w-4 mr-2" />
+                  <Plus className="h-4 w-4 mr-2 text-white" />
                   Yeni Kullanıcı
                 </Button>
               </Link>
@@ -166,15 +174,15 @@ export default function UserListPage() {
           </div>
 
           {/* Search and Filters */}
-          <div className="p-6 border-b border-planb-grey-2">
+          <div className="p-4 border-b border-planb-grey-2">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-planb-grey-1" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-dashboard-text" />
                 <Input
                   placeholder="Kullanıcı ara..."
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
-                  className="pl-10 h-10"
+                  className="pl-10 h-10 bg-dashboard-input"
                 />
               </div>
               <Select
@@ -184,7 +192,7 @@ export default function UserListPage() {
                   setPage(0);
                 }}
               >
-                <SelectTrigger className="w-full md:w-40 h-10">
+                <SelectTrigger className="w-full md:w-40 h-10 border-0! bg-white! text-dashboard-primary">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -195,7 +203,7 @@ export default function UserListPage() {
                 </SelectContent>
               </Select>
               <Select value={sort} onValueChange={(value) => setSort(value)}>
-                <SelectTrigger className="w-full md:w-40 h-10">
+                <SelectTrigger className="w-full md:w-40 h-10 border-0! bg-white! text-dashboard-primary">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -209,20 +217,20 @@ export default function UserListPage() {
           </div>
 
           {/* Content */}
-          <div className="p-6">
+          <div className="p-4">
             {isLoading ? (
               <div className="flex items-center justify-center py-20">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-planb-main"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-dashboard-primary"></div>
               </div>
             ) : users.length === 0 ? (
               <Empty
-                icon={<Search className="h-8 w-8 text-planb-grey-1" />}
+                icon={<Search className="h-8 w-8 text-dashboard-text" />}
                 title="Kullanıcı Bulunamadı"
                 description="Arama kriterlerinize uygun kullanıcı bulunamadı"
                 action={
                   <Link to="/users/create">
-                    <Button>
-                      <Plus className="h-4 w-4 mr-2" />
+                    <Button className="bg-white hover:bg-gray-50 text-slate-700 border border-slate-200 shadow-sm">
+                      <Plus className="h-4 w-4 mr-2 text-slate-700" />
                       Yeni Kullanıcı Ekle
                     </Button>
                   </Link>
@@ -250,25 +258,25 @@ export default function UserListPage() {
                   <TableBody>
                     {users.map((user) => (
                       <TableRow key={user.id} className="hover:bg-planb-grey-3">
-                        <TableCell>
-                          <Avatar className="h-12 w-12">
-                            <AvatarFallback className="bg-planb-orange text-white text-sm font-semibold">
+                        <TableCell className="py-3">
+                          <Avatar className="h-10 w-10">
+                            <AvatarFallback className="bg-planb-orange text-white text-xs font-semibold">
                               {user.username[0].toUpperCase()}
                             </AvatarFallback>
                           </Avatar>
                         </TableCell>
-                        <TableCell>
-                          <div className="font-semibold text-planb-main">
+                        <TableCell className="py-3">
+                          <div className="font-semibold text-sm text-dashboard-primary">
                             {user.username}
                           </div>
                         </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2 text-sm text-planb-grey-1">
+                        <TableCell className="py-3">
+                          <div className="flex items-center gap-2 text-xs text-dashboard-text">
                             <Mail className="h-3 w-3" />
                             <span>{user.email}</span>
                           </div>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="py-3">
                           <Badge
                             variant={user.active ? "default" : "secondary"}
                             className={
@@ -280,19 +288,19 @@ export default function UserListPage() {
                             {user.active ? "Aktif" : "Pasif"}
                           </Badge>
                         </TableCell>
-                        <TableCell>
-                          <div className="text-sm text-planb-grey-1">
+                        <TableCell className="py-3">
+                          <div className="text-xs text-dashboard-text">
                             {new Date(user.createdAt).toLocaleDateString(
                               "tr-TR"
                             )}
                           </div>
                         </TableCell>
-                        <TableCell>
-                          <div className="flex items-center justify-end gap-2">
+                        <TableCell className="py-3">
+                          <div className="flex items-center justify-end gap-1.5">
                             <Link to={`/users/detail/${user.id}`}>
                               <Button
                                 size="icon"
-                                className="!h-8 !w-8 !bg-white hover:!bg-gray-100 !text-blue-600 !border-0"
+                                className="h-8! w-8! bg-white! hover:bg-gray-100! text-blue-600! border-0!"
                               >
                                 <Eye className="h-4 w-4 text-blue-600" />
                               </Button>
@@ -300,7 +308,7 @@ export default function UserListPage() {
                             <Link to={`/users/edit/${user.id}`}>
                               <Button
                                 size="icon"
-                                className="!h-8 !w-8 !bg-white hover:!bg-gray-100 !text-blue-600 !border-0"
+                                className="h-8! w-8! bg-white! hover:bg-gray-100! text-blue-600! border-0!"
                               >
                                 <Edit className="h-4 w-4 text-blue-600" />
                               </Button>
@@ -311,9 +319,9 @@ export default function UserListPage() {
                                 setSelectedUserId(user.id);
                                 setDeleteModalOpen(true);
                               }}
-                              className="!h-8 !w-8 !bg-white hover:!bg-gray-100 !text-red-600 !border-0"
+                              className="h-8! w-8! bg-white! hover:bg-gray-100! text-planb-red! border-0!"
                             >
-                              <Trash2 className="h-4 w-4 text-red-600" />
+                              <Trash2 className="h-4 w-4 text-planb-red" />
                             </Button>
                           </div>
                         </TableCell>
@@ -324,35 +332,6 @@ export default function UserListPage() {
               </div>
             )}
           </div>
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="p-6 border-t border-planb-grey-2">
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-planb-grey-1">
-                  Sayfa {page + 1} / {totalPages} • Toplam {totalElements} kayıt
-                </p>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setPage(page - 1)}
-                    disabled={page === 0}
-                  >
-                    Önceki
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setPage(page + 1)}
-                    disabled={page >= totalPages - 1}
-                  >
-                    Sonraki
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
@@ -361,19 +340,19 @@ export default function UserListPage() {
         <DialogContent className="bg-white max-w-lg p-0 border-0 shadow-2xl">
           <div className="relative overflow-hidden">
             {/* Background Pattern */}
-            <div className="absolute inset-0 bg-gradient-to-br from-red-50 via-white to-orange-50 opacity-50"></div>
+            <div className="absolute inset-0 bg-red-50 opacity-50"></div>
 
             <div className="relative p-8">
               {/* Header with Icon */}
-              <div className="flex items-start gap-4 mb-8">
-                <div className="p-4 rounded-2xl bg-gradient-to-br from-red-500 to-orange-500 shadow-lg">
+              <div className="flex items-start gap-4 mb-6">
+                <div className="p-4 rounded-sm bg-planb-red shadow-lg">
                   <Trash2 className="h-7 w-7 text-white" />
                 </div>
                 <div className="flex-1">
-                  <DialogTitle className="text-2xl font-bold text-planb-main mb-2">
+                  <DialogTitle className="text-2xl font-bold text-dashboard-primary mb-1.5">
                     Kullanıcıyı Sil
                   </DialogTitle>
-                  <DialogDescription className="text-sm text-planb-grey-1 leading-relaxed">
+                  <DialogDescription className="text-sm text-dashboard-text leading-relaxed">
                     Bu işlem geri alınamaz! Lütfen silmek istediğinizden emin
                     olun.
                   </DialogDescription>
@@ -382,19 +361,19 @@ export default function UserListPage() {
 
               {/* Warning Box */}
               {selectedUser && (
-                <div className="relative bg-white border-2 border-red-200 rounded-2xl p-5 mb-8 shadow-sm">
+                <div className="relative bg-white border-2 border-red-200 rounded-sm p-5 mb-6 shadow-sm">
                   <div className="flex items-start gap-4">
-                    <div className="p-2 rounded-xl bg-red-50">
+                    <div className="p-2 rounded-sm bg-red-50">
                       <AlertTriangle className="h-5 w-5 text-red-600" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-planb-main mb-1">
+                      <h3 className="font-semibold text-dashboard-primary mb-1">
                         Dikkat! {selectedUser.username} kullanıcısını silmek
                         üzeresiniz
                       </h3>
-                      <p className="text-sm text-planb-grey-1 leading-relaxed mt-2">
+                      <p className="text-sm text-dashboard-text leading-relaxed mt-1.5">
                         Onaylamak için kullanıcı adını yazın:{" "}
-                        <span className="font-mono font-bold text-planb-main bg-planb-cream px-2 py-0.5 rounded">
+                        <span className="font-mono font-bold text-dashboard-primary bg-planb-cream px-2 py-0.5 rounded-sm">
                           {selectedUser.username}
                         </span>
                       </p>
@@ -404,8 +383,8 @@ export default function UserListPage() {
               )}
 
               {/* Input Section */}
-              <div className="space-y-3 mb-8">
-                <label className="text-sm font-bold text-planb-main flex items-center gap-2">
+              <div className="space-y-2 mb-6">
+                <label className="text-sm font-bold text-dashboard-primary flex items-center gap-2 mb-1">
                   <div className="w-1.5 h-1.5 rounded-full bg-planb-red"></div>
                   Kullanıcı Adı
                 </label>
@@ -423,7 +402,7 @@ export default function UserListPage() {
                   className="h-12 text-base border-2 focus:border-planb-red"
                 />
                 {deleteError && (
-                  <div className="flex items-center gap-2 text-sm text-planb-red bg-red-50 p-3 rounded-xl">
+                  <div className="flex items-center gap-2 text-sm text-planb-red bg-red-50 p-3 rounded-sm">
                     <XCircle className="h-4 w-4 shrink-0" />
                     <span className="font-medium">{deleteError}</span>
                   </div>
@@ -431,7 +410,7 @@ export default function UserListPage() {
               </div>
 
               {/* Actions */}
-              <div className="flex justify-end gap-3 pt-6 border-t-2 border-planb-grey-2">
+              <div className="flex justify-end gap-3 pt-4 border-t-2 border-planb-grey-2">
                 <Button
                   variant="outline"
                   onClick={() => {
@@ -447,7 +426,7 @@ export default function UserListPage() {
                 <Button
                   onClick={handleDelete}
                   disabled={deleteUserMutation.isPending}
-                  className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white px-8 h-11 font-semibold shadow-lg hover:shadow-xl transition-all"
+                  className="bg-linear-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white px-8 h-11 font-semibold shadow-lg hover:shadow-xl transition-all"
                 >
                   {deleteUserMutation.isPending ? (
                     <>

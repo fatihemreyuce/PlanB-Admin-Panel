@@ -29,19 +29,21 @@ export default function UserDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-planb-background">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-planb-main"></div>
+      <div className="min-h-screen flex items-center justify-center bg-dashboard-bg-main">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-dashboard-primary"></div>
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-planb-background">
+      <div className="min-h-screen flex items-center justify-center bg-dashboard-bg-main">
         <div className="text-center space-y-4">
           <p className="text-planb-red font-bold">Kullanıcı bulunamadı</p>
           <Link to="/users">
-            <Button variant="outline">Geri Dön</Button>
+            <Button className="bg-white! hover:bg-gray-100! text-blue-600! border-0!">
+              Geri Dön
+            </Button>
           </Link>
         </div>
       </div>
@@ -49,10 +51,10 @@ export default function UserDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-planb-background p-6">
+    <div className="min-h-screen bg-dashboard-bg-main p-6">
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Header */}
-        <div className="bg-white rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
+        <div className="bg-dashboard-bg-card rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
           <div className="bg-gradient-to-br from-indigo-600 to-purple-600 p-8">
             <Link to="/users">
               <Button
@@ -62,7 +64,7 @@ export default function UserDetailPage() {
                 <ArrowLeft className="h-5 w-5" />
               </Button>
             </Link>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center">
               <div className="flex items-center gap-4">
                 <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-sm">
                   <Avatar className="h-20 w-20">
@@ -81,12 +83,6 @@ export default function UserDetailPage() {
                   </div>
                 </div>
               </div>
-              <Link to={`/users/edit/${user.id}`}>
-                <Button className="bg-white text-planb-main hover:bg-gray-100 shadow-lg">
-                  <Edit className="h-4 w-4 mr-2" />
-                  Düzenle
-                </Button>
-              </Link>
             </div>
           </div>
         </div>
@@ -238,10 +234,12 @@ export default function UserDetailPage() {
         {/* Actions */}
         <div className="flex justify-end gap-4">
           <Link to="/users">
-            <Button variant="outline">Geri Dön</Button>
+            <Button className="bg-slate-600 hover:bg-slate-700 text-white shadow-sm">
+              Geri Dön
+            </Button>
           </Link>
           <Link to={`/users/edit/${user.id}`}>
-            <Button className="bg-planb-green hover:bg-planb-main text-white">
+            <Button className="bg-blue-500 hover:bg-blue-600 text-white shadow-sm">
               <Edit className="h-4 w-4 mr-2" />
               Düzenle
             </Button>

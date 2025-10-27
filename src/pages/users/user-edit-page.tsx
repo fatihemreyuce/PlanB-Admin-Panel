@@ -79,15 +79,15 @@ export default function UserEditPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-planb-background">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-planb-main"></div>
+      <div className="min-h-screen flex items-center justify-center bg-dashboard-bg-main">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-dashboard-primary"></div>
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-planb-background">
+      <div className="min-h-screen flex items-center justify-center bg-dashboard-bg-main">
         <div className="text-center space-y-4">
           <p className="text-planb-red font-bold">Kullanıcı bulunamadı</p>
           <Link to="/users">
@@ -99,10 +99,10 @@ export default function UserEditPage() {
   }
 
   return (
-    <div className="min-h-screen bg-planb-background p-6">
+    <div className="min-h-screen bg-dashboard-bg-main p-6">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
-        <div className="bg-white rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
+        <div className="bg-dashboard-bg-card rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
           <div className="bg-gradient-to-br from-planb-green to-planb-main p-8">
             <Link to="/users">
               <Button
@@ -239,9 +239,8 @@ export default function UserEditPage() {
               <div className="flex justify-end gap-4 pt-6 border-t border-planb-grey-2">
                 <Link to="/users">
                   <Button
-                    variant="outline"
                     type="button"
-                    className="px-8 h-11 font-semibold"
+                    className="px-8 h-11 font-semibold bg-slate-600 hover:bg-slate-700 text-white shadow-sm"
                   >
                     İptal
                   </Button>

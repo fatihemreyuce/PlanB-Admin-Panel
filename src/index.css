@@ -16,7 +16,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   --radius: 0.625rem;
-  --background: #f0f4f8;
+  --background: #f8f8f8;
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -48,16 +48,32 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
-  /* PlanB Color Palette */
-  --planb-main: #2e4057;
+  /* Dashboard Color Palette */
+  --dashboard-primary: #3f4260;
+  --dashboard-accent: #ff8c42;
+  --dashboard-text: #8e8e9f;
+  --dashboard-bg-main: #f8f8f8;
+  --dashboard-bg-card: #ffffff;
+  --dashboard-input: #f0f2f7;
+  --dashboard-logout: #8e8e9f;
+
+  /* Chart Colors */
+  --chart-orange: #ff8c42;
+  --chart-dark-orange: #c07040;
+  --chart-brown: #6b4e3b;
+  --chart-light-grey: #d3d3d3;
+  --chart-muted-brown: #a08070;
+
+  /* PlanB Legacy Colors */
+  --planb-main: #3f4260;
   --planb-chocolate: #8b5a3c;
-  --planb-orange: #ff8c69;
+  --planb-orange: #ff8c42;
   --planb-cream: #f5e6d3;
-  --planb-green: #4a9b8e;
+  --planb-green: #34a88e;
   --planb-red: #ff9999;
-  --planb-background: #f0f4f8;
+  --planb-background: #f8f8f8;
   --planb-white: #ffffff;
-  --planb-grey-1: #6b7280;
+  --planb-grey-1: #8e8e9f;
   --planb-grey-2: #e5e7eb;
   --planb-grey-3: #f3f4f6;
 
@@ -66,6 +82,13 @@
   --planb-white-25: rgba(255, 255, 255, 0.25);
   --planb-white-10: rgba(255, 255, 255, 0.1);
   --planb-main-5: rgba(46, 64, 87, 0.05);
+
+  /* Sidebar Colors */
+  --sidebar-dark-blue: #3f4260;
+  --sidebar-orange: #ff8c42;
+  --sidebar-inactive: #8e8e9f;
+  --sidebar-bg-top: rgb(250, 248, 249);
+  --sidebar-bg-bottom: rgb(240, 242, 247);
 }
 
 a {
@@ -175,6 +198,29 @@ button:focus-visible {
   --color-planb-white-25: var(--planb-white-25);
   --color-planb-white-10: var(--planb-white-10);
   --color-planb-main-5: var(--planb-main-5);
+
+  /* Sidebar Colors */
+  --color-sidebar-dark-blue: var(--sidebar-dark-blue);
+  --color-sidebar-orange: var(--sidebar-orange);
+  --color-sidebar-inactive: var(--sidebar-inactive);
+  --color-sidebar-bg-top: var(--sidebar-bg-top);
+  --color-sidebar-bg-bottom: var(--sidebar-bg-bottom);
+
+  /* Dashboard Colors */
+  --color-dashboard-primary: var(--dashboard-primary);
+  --color-dashboard-accent: var(--dashboard-accent);
+  --color-dashboard-text: var(--dashboard-text);
+  --color-dashboard-bg-main: var(--dashboard-bg-main);
+  --color-dashboard-bg-card: var(--dashboard-bg-card);
+  --color-dashboard-input: var(--dashboard-input);
+  --color-dashboard-logout: var(--dashboard-logout);
+
+  /* Chart Colors */
+  --color-chart-orange: var(--chart-orange);
+  --color-chart-dark-orange: var(--chart-dark-orange);
+  --color-chart-brown: var(--chart-brown);
+  --color-chart-light-grey: var(--chart-light-grey);
+  --color-chart-muted-brown: var(--chart-muted-brown);
 
   /* PlanB Gradients */
   --gradient-linear-1: linear-gradient(180deg, #ff8c69 0%, #c45a7c 100%);

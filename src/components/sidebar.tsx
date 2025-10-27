@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, LogOut, User } from "lucide-react";
+import { LayoutDashboard, Users, LogOut } from "lucide-react";
 import { useLoginState } from "@/hooks/use-login-state";
 import { useUserMe } from "@/hooks/use-user";
 
@@ -26,13 +26,13 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-60 bg-white/50 backdrop-blur-sm">
+    <aside className="fixed left-0 top-0 h-screen w-60 bg-gradient-sidebar border-r border-planb-grey-2">
       <div className="flex flex-col h-full">
         {/* Logo Section */}
         <div className="p-6">
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold text-planb-main">
-              PlanB<span className="text-planb-orange">.</span>
+            <h1 className="text-2xl font-bold text-sidebar-dark-blue">
+              PlanB<span className="text-sidebar-orange">.</span>
             </h1>
           </div>
         </div>
@@ -47,13 +47,13 @@ export default function Sidebar() {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl ${
                   isActive
-                    ? "bg-white text-planb-main shadow-sm"
-                    : "text-planb-grey-1"
+                    ? "bg-white text-sidebar-dark-blue shadow-md"
+                    : "text-sidebar-inactive hover:text-sidebar-dark-blue"
                 }`}
               >
-                <Icon className={`h-5 w-5 ${isActive ? "" : ""}`} />
+                <Icon className="h-5 w-5" />
                 <span className="text-sm font-medium">{item.title}</span>
               </Link>
             );
@@ -61,20 +61,22 @@ export default function Sidebar() {
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-planb-grey-2 space-y-3">
+        <div className="p-4 space-y-1.5">
           {/* User Info */}
           {currentUser && (
-            <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg ">
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-planb-main text-white">
-                <User className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-planb-main truncate">
-                  {currentUser.username}
-                </p>
-                <p className="text-xs text-planb-grey-1 truncate">
-                  {currentUser.email}
-                </p>
+            <div className="bg-white/60 backdrop-blur-sm rounded-xl p-2.5 border border-white/20">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-sidebar-dark-blue to-dashboard-accent text-white flex items-center justify-center font-bold text-xs shadow-sm">
+                  {currentUser.username[0].toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-bold text-sidebar-dark-blue leading-tight truncate">
+                    {currentUser.username}
+                  </p>
+                  <p className="text-[10px] text-sidebar-inactive leading-tight truncate mt-0.5">
+                    {currentUser.email}
+                  </p>
+                </div>
               </div>
             </div>
           )}
@@ -82,10 +84,10 @@ export default function Sidebar() {
           {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-planb-red"
+            className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg bg-sidebar-dark-blue text-white/90 hover:text-white transition-colors"
           >
-            <LogOut className="h-5 w-5" />
-            <span className="text-sm font-medium">Çıkış Yap</span>
+            <LogOut className="h-3.5 w-3.5" />
+            <span className="text-xs font-medium">Çıkış Yap</span>
           </button>
         </div>
       </div>

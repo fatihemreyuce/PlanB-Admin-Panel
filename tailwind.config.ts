@@ -68,6 +68,29 @@ const config: Config = {
           "white-10": "var(--planb-white-10)",
           "main-5": "var(--planb-main-5)",
         },
+        sidebar: {
+          "dark-blue": "var(--sidebar-dark-blue)",
+          orange: "var(--sidebar-orange)",
+          inactive: "var(--sidebar-inactive)",
+          "bg-top": "var(--sidebar-bg-top)",
+          "bg-bottom": "var(--sidebar-bg-bottom)",
+        },
+        dashboard: {
+          primary: "var(--dashboard-primary)",
+          accent: "var(--dashboard-accent)",
+          text: "var(--dashboard-text)",
+          "bg-main": "var(--dashboard-bg-main)",
+          "bg-card": "var(--dashboard-bg-card)",
+          input: "var(--dashboard-input)",
+          logout: "var(--dashboard-logout)",
+        },
+        chart: {
+          orange: "var(--chart-orange)",
+          "dark-orange": "var(--chart-dark-orange)",
+          brown: "var(--chart-brown)",
+          "light-grey": "var(--chart-light-grey)",
+          "muted-brown": "var(--chart-muted-brown)",
+        },
       },
       backgroundImage: {
         "gradient-linear-1": "var(--gradient-linear-1)",
@@ -77,6 +100,8 @@ const config: Config = {
         "gradient-linear-5": "var(--gradient-linear-5)",
         "gradient-linear-6": "var(--gradient-linear-6)",
         "gradient-linear-7": "var(--gradient-linear-7)",
+        "sidebar-gradient":
+          "linear-gradient(180deg, var(--sidebar-bg-top) 0%, var(--sidebar-bg-bottom) 100%)",
       },
     },
   },
