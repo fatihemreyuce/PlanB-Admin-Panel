@@ -1,0 +1,48 @@
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  getSubsNotifications,
+  deleteSubsNotification,
+  createSubsNotification,
+} from "@/services/subs-notifications-service";
+import { toast } from "sonner";
+import type { SubsNotificationRequest } from "@/types/subs-notifications.types";
+
+export const useCreateNotificationSub = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (request: SubsNotificationRequest) =>
+      createSubsNotification(request),
+    onSuccess: () => {
+      toast.success("Bildirim aboneliği başarıyla oluşturuldu");
+      queryClient.invalidateQueries({ queryKey: ["notification-subs"] });
+    },
+    onError: () => {
+      toast.error("Failed to create notification subscribers");
+    },
+  });
+};
+
+export const useGetNotificationSubs = (
+  page: number,
+  size: number,
+  sort: string
+) => {
+  return useQuery({
+    queryKey: ["notification-subs", page, size, sort],
+    queryFn: () => getSubsNotifications(page, size, sort),
+  });
+};
+
+export const useDeleteNotificationSub = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => deleteSubsNotification(id),
+    onSuccess: () => {
+      toast.success("Bildirim aboneliği başarıyla silindi");
+      queryClient.invalidateQueries({ queryKey: ["notification-subs"] });
+    },
+    onError: () => {
+      toast.error("Failed to delete notification subscribers");
+    },
+  });
+};

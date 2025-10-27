@@ -1,5 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, Bell, LogOut } from "lucide-react";
+import {
+  LayoutDashboard,
+  Users,
+  Bell,
+  LogOut,
+  UserPlus,
+  UsersRound,
+} from "lucide-react";
 import { useLoginState } from "@/hooks/use-login-state";
 import { useUserMe } from "@/hooks/use-user";
 
@@ -27,6 +34,17 @@ export default function Sidebar() {
       title: "Bildirimler",
       icon: Bell,
       path: "/notifications",
+      rotate: true,
+    },
+    {
+      title: "Bildirim Aboneleri",
+      icon: UserPlus,
+      path: "/notification-subs",
+    },
+    {
+      title: "Takım Üyeleri",
+      icon: UsersRound,
+      path: "/team-members",
     },
   ];
 
@@ -46,7 +64,12 @@ export default function Sidebar() {
         <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
           {menuItems.map((item) => {
             const Icon = item.icon;
-            const isActive = location.pathname === item.path;
+            const isActive =
+              location.pathname === item.path ||
+              (item.path === "/notifications" &&
+                location.pathname.startsWith("/notifications")) ||
+              (item.path === "/team-members" &&
+                location.pathname.startsWith("/team-members"));
 
             return (
               <Link
@@ -58,7 +81,7 @@ export default function Sidebar() {
                     : "text-sidebar-inactive hover:text-sidebar-dark-blue"
                 }`}
               >
-                <Icon className="h-5 w-5" />
+                <Icon className={`h-5 w-5 ${item.rotate ? "rotate-45" : ""}`} />
                 <span className="text-sm font-medium">{item.title}</span>
               </Link>
             );

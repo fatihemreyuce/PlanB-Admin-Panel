@@ -300,7 +300,7 @@ export default function UserListPage() {
                             <Link to={`/users/detail/${user.id}`}>
                               <Button
                                 size="icon"
-                                className="h-8! w-8! bg-white! hover:bg-gray-100! text-blue-600! border-0!"
+                                className="h-8! w-8! bg-blue-100! hover:bg-blue-200! text-blue-600! border-0! rounded-full shadow-sm hover:shadow-md transition-all"
                               >
                                 <Eye className="h-4 w-4 text-blue-600" />
                               </Button>
@@ -308,7 +308,7 @@ export default function UserListPage() {
                             <Link to={`/users/edit/${user.id}`}>
                               <Button
                                 size="icon"
-                                className="h-8! w-8! bg-white! hover:bg-gray-100! text-blue-600! border-0!"
+                                className="h-8! w-8! bg-blue-100! hover:bg-blue-200! text-blue-600! border-0! rounded-full shadow-sm hover:shadow-md transition-all"
                               >
                                 <Edit className="h-4 w-4 text-blue-600" />
                               </Button>
@@ -319,7 +319,7 @@ export default function UserListPage() {
                                 setSelectedUserId(user.id);
                                 setDeleteModalOpen(true);
                               }}
-                              className="h-8! w-8! bg-white! hover:bg-gray-100! text-planb-red! border-0!"
+                              className="h-8! w-8! bg-red-100! hover:bg-red-200! text-planb-red! border-0! rounded-full shadow-sm hover:shadow-md transition-all"
                             >
                               <Trash2 className="h-4 w-4 text-planb-red" />
                             </Button>

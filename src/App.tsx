@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "sonner";
 import QueryProvider from "@/providers/query-client-provider";
 import { LoginProvider } from "@/providers/login-state-provider";
 import ProtectedRoute from "@/providers/protected-route";
@@ -12,6 +13,13 @@ import NotificationListPage from "@/pages/notifications/notification-list-page";
 import NotificationCreatePage from "@/pages/notifications/notification-create-page";
 import NotificationEditPage from "@/pages/notifications/notification-edit-page";
 import NotificationDetailPage from "@/pages/notifications/notification-detail-page";
+import SubsListPage from "@/pages/notification-subs/subs-list-page";
+import SubsCreatePage from "@/pages/notification-subs/subs-create-page";
+import SubsDetailPage from "@/pages/notification-subs/subs-detail-page";
+import TeamMembersListPage from "@/pages/team-members/team-members-list-page";
+import TeamMembersCreatePage from "@/pages/team-members/team-members-create-page";
+import TeamMembersEditPage from "@/pages/team-members/team-members-edit-page";
+import TeamMembersDetailPage from "@/pages/team-members/team-members-detail-page";
 
 function Dashboard() {
   return (
@@ -29,6 +37,7 @@ function App() {
     <QueryProvider>
       <LoginProvider>
         <BrowserRouter>
+          <Toaster position="top-right" />
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route element={<ProtectedRoute />}>
@@ -53,6 +62,28 @@ function App() {
                 <Route
                   path="/notifications/detail/:id"
                   element={<NotificationDetailPage />}
+                />
+                <Route path="/notification-subs" element={<SubsListPage />} />
+                <Route
+                  path="/notification-subs/create"
+                  element={<SubsCreatePage />}
+                />
+                <Route
+                  path="/notification-subs/detail/:id"
+                  element={<SubsDetailPage />}
+                />
+                <Route path="/team-members" element={<TeamMembersListPage />} />
+                <Route
+                  path="/team-members/create"
+                  element={<TeamMembersCreatePage />}
+                />
+                <Route
+                  path="/team-members/edit/:id"
+                  element={<TeamMembersEditPage />}
+                />
+                <Route
+                  path="/team-members/detail/:id"
+                  element={<TeamMembersDetailPage />}
                 />
                 <Route
                   path="/"
