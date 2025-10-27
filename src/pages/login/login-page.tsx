@@ -126,11 +126,11 @@ export default function LoginPage() {
                 />
                 <Button
                   type="button"
-                  variant="secondary"
+                  variant="ghost"
                   size="icon"
                   onClick={() => setShowPassword(!showPassword)}
                   disabled={isLoading}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 bg-planb-main hover:bg-planb-main/90 text-white shadow-md"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8! bg-transparent! hover:bg-planb-grey-3! text-dashboard-text! hover:text-planb-main! border-0!"
                 >
                   {showPassword ? (
                     <EyeOff className="h-4 w-4" />
