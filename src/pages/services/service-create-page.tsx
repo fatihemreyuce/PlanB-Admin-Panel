@@ -13,6 +13,10 @@ import {
 } from "@/components/ui/card";
 import { useCreateService } from "@/hooks/use-service";
 import type { ServiceRequest } from "@/types/service.types";
+import {
+  serviceCreateSchema,
+  type ServiceCreateFormData,
+} from "@/validations/service.validation";
 
 export default function ServiceCreatePage() {
   const navigate = useNavigate();
@@ -20,17 +24,28 @@ export default function ServiceCreatePage() {
   const [description, setDescription] = useState("");
   const [iconFile, setIconFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof ServiceCreateFormData, string>>
+  >({});
   const inputRef = useRef<HTMLInputElement>(null);
 
   const createServiceMutation = useCreateService();
 
   const handleFile = (file: File) => {
     if (file.size > 5 * 1024 * 1024) {
-      alert("Dosya boyutu 5MB'dan büyük olamaz");
+      setErrors({ icon: "Dosya boyutu 5MB'dan büyük olamaz" });
+      return;
+    }
+    if (
+      !["image/jpeg", "image/png", "image/jpg", "image/webp"].includes(
+        file.type
+      )
+    ) {
+      setErrors({ icon: "Sadece JPG, PNG veya WEBP formatı desteklenir" });
       return;
     }
     setIconFile(file);
+    setErrors({});
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreview(reader.result as string);
@@ -46,27 +61,38 @@ export default function ServiceCreatePage() {
   const handleRemove = () => {
     setIconFile(null);
     setPreview(null);
+    setErrors({});
     if (inputRef.current) inputRef.current.value = "";
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setErrors({});
 
-    if (!name.trim() || !description.trim()) {
-      setError("Lütfen tüm zorunlu alanları doldurun");
-      return;
-    }
+    const formData: ServiceCreateFormData = {
+      name,
+      description,
+      icon: iconFile!,
+    };
 
-    if (!iconFile) {
-      setError("Lütfen bir ikon dosyası seçin");
+    const result = serviceCreateSchema.safeParse(formData);
+    if (!result.success) {
+      const fieldErrors: Partial<Record<keyof ServiceCreateFormData, string>> =
+        {};
+      result.error.issues.forEach((issue) => {
+        if (issue.path[0]) {
+          fieldErrors[issue.path[0] as keyof ServiceCreateFormData] =
+            issue.message;
+        }
+      });
+      setErrors(fieldErrors);
       return;
     }
 
     const request: ServiceRequest = {
       name,
       description,
-      icon: iconFile,
+      icon: iconFile!,
     };
 
     try {
@@ -74,7 +100,6 @@ export default function ServiceCreatePage() {
       navigate("/services");
     } catch (error) {
       console.error("Error creating service:", error);
-      setError("Servis oluşturulurken bir hata oluştu");
     }
   };
 
@@ -106,12 +131,6 @@ export default function ServiceCreatePage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
-              {error && (
-                <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
-                  {error}
-                </div>
-              )}
-
               {/* Name */}
               <div className="space-y-2">
                 <Label htmlFor="name">
@@ -124,6 +143,11 @@ export default function ServiceCreatePage() {
                   placeholder="Servis ismini girin..."
                   className="h-12"
                 />
+                {errors.name && (
+                  <p className="text-sm text-planb-red font-medium">
+                    {errors.name}
+                  </p>
+                )}
               </div>
 
               {/* Description */}
@@ -138,6 +162,11 @@ export default function ServiceCreatePage() {
                   placeholder="Servis açıklamasını girin..."
                   className="h-12"
                 />
+                {errors.description && (
+                  <p className="text-sm text-planb-red font-medium">
+                    {errors.description}
+                  </p>
+                )}
               </div>
 
               {/* Icon */}
@@ -193,6 +222,11 @@ export default function ServiceCreatePage() {
                     )}
                   </div>
                 </div>
+                {errors.icon && (
+                  <p className="text-sm text-planb-red font-medium">
+                    {errors.icon}
+                  </p>
+                )}
               </div>
 
               {/* Actions */}
