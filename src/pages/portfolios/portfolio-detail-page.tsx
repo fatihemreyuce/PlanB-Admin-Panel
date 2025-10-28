@@ -187,7 +187,11 @@ export default function PortfolioDetailPage() {
                       <div key={index} className="relative">
                         {typeof asset.asset === "string" ? (
                           <img
-                            src={`/api/v1/files/${asset.asset}`}
+                            src={
+                              asset.asset.startsWith("http")
+                                ? asset.asset
+                                : `/api/v1/files/${asset.asset}`
+                            }
                             alt={`Asset ${index + 1}`}
                             className="w-full h-32 object-cover rounded-lg"
                           />

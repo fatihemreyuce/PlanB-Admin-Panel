@@ -82,9 +82,13 @@ export default function PortfolioEditPage() {
   };
 
   const toggleCover = (index: number) => {
-    const newAssets = [...assets];
-    newAssets[index].isCovered = !newAssets[index].isCovered;
-    setAssets(newAssets);
+    setAssets((prev) =>
+      prev.map((asset, i) => ({
+        ...asset,
+        // Only allow one cover at a time
+        isCovered: i === index ? !asset.isCovered : false,
+      }))
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
