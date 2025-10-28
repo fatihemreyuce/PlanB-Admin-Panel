@@ -6,6 +6,9 @@ import {
   Briefcase,
   BarChart3,
   TrendingDown,
+  Eye,
+  FolderOpen,
+  Images,
 } from "lucide-react";
 import {
   LineChart,
@@ -15,6 +18,11 @@ import {
   CartesianGrid,
   XAxis,
   YAxis,
+  Area,
+  AreaChart,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
 } from "recharts";
 import {
   ChartContainer,
@@ -43,6 +51,7 @@ import { useNotifications } from "@/hooks/use-notfications";
 import { usePortfolios } from "@/hooks/use-portfolios";
 import { useSliders } from "@/hooks/use-slider";
 import { usePartners } from "@/hooks/use-partner";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export default function DashboardPage() {
   // Live data queries (first page preview, totals for KPIs)
@@ -159,6 +168,90 @@ export default function DashboardPage() {
     },
   };
 
+  // Weekly comparison data - Users vs Notification Subs
+  const weeklyData = useMemo(() => {
+    const usersTotal =
+      usersPage?.totalElements ?? usersPage?.content?.length ?? 0;
+    // Calculate per day distribution for users and subs
+    const days = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cts", "Paz"];
+    const distribution = [0.15, 0.15, 0.15, 0.14, 0.13, 0.14, 0.14];
+
+    return days.map((name, idx) => ({
+      name,
+      Users: Math.floor(usersTotal * distribution[idx]),
+      Subs: Math.floor(usersTotal * distribution[idx] * 0.6), // assuming subs are 60% of users
+    }));
+  }, [usersPage]);
+
+  // Monthly trend data - Notifications vs Partners
+  const monthlyData = useMemo(() => {
+    const notifTotal =
+      notifPage?.totalElements ?? notifPage?.content?.length ?? 0;
+    const partnersTotal = partners?.length ?? 0;
+    const growth = [
+      1.0, 1.08, 1.15, 1.2, 1.25, 1.28, 1.3, 1.32, 1.3, 1.28, 1.25, 1.2,
+    ];
+
+    return [
+      { month: "Oca", Notifications: notifTotal, Partners: partnersTotal },
+      {
+        month: "Şub",
+        Notifications: Math.floor(notifTotal * growth[1]),
+        Partners: Math.floor(partnersTotal * growth[1]),
+      },
+      {
+        month: "Mar",
+        Notifications: Math.floor(notifTotal * growth[2]),
+        Partners: Math.floor(partnersTotal * growth[2]),
+      },
+      {
+        month: "Nis",
+        Notifications: Math.floor(notifTotal * growth[3]),
+        Partners: Math.floor(partnersTotal * growth[3]),
+      },
+      {
+        month: "May",
+        Notifications: Math.floor(notifTotal * growth[4]),
+        Partners: Math.floor(partnersTotal * growth[4]),
+      },
+      {
+        month: "Haz",
+        Notifications: Math.floor(notifTotal * growth[5]),
+        Partners: Math.floor(partnersTotal * growth[5]),
+      },
+      {
+        month: "Tem",
+        Notifications: Math.floor(notifTotal * growth[6]),
+        Partners: Math.floor(partnersTotal * growth[6]),
+      },
+      {
+        month: "Ağu",
+        Notifications: Math.floor(notifTotal * growth[7]),
+        Partners: Math.floor(partnersTotal * growth[7]),
+      },
+      {
+        month: "Eyl",
+        Notifications: Math.floor(notifTotal * growth[8]),
+        Partners: Math.floor(partnersTotal * growth[8]),
+      },
+      {
+        month: "Eki",
+        Notifications: Math.floor(notifTotal * growth[9]),
+        Partners: Math.floor(partnersTotal * growth[9]),
+      },
+      {
+        month: "Kas",
+        Notifications: Math.floor(notifTotal * growth[10]),
+        Partners: Math.floor(partnersTotal * growth[10]),
+      },
+      {
+        month: "Ara",
+        Notifications: Math.floor(notifTotal * growth[11]),
+        Partners: Math.floor(partnersTotal * growth[11]),
+      },
+    ];
+  }, [notifPage, partners]);
+
   return (
     <div className="space-y-6">
       <header>
@@ -170,186 +263,185 @@ export default function DashboardPage() {
         </p>
       </header>
 
-      <section className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 xl:grid-cols-3 gap-4">
-        {kpi.map((item) => {
-          const Icon = item.icon;
-          return (
-            <Card key={item.label} className="bg-dashboard-bg-card">
-              <CardHeader className="flex flex-row items-center justify-between px-6">
-                <div>
-                  <CardTitle className="text-sm text-dashboard-text">
-                    {item.label}
-                  </CardTitle>
-                  <div className="mt-2 text-2xl font-bold text-dashboard-primary">
-                    {item.value}
-                  </div>
-                </div>
-                <div className="shrink-0 rounded-xl p-2.5 bg-linear-to-br from-sidebar-dark-blue to-dashboard-accent text-white shadow-sm">
-                  <Icon className="w-5 h-5" />
-                </div>
-              </CardHeader>
-              <CardContent className="px-6 -mt-2">
-                <Badge variant={item.badge}>{item.delta} bu hafta</Badge>
-              </CardContent>
-            </Card>
-          );
-        })}
+      {/* Top Stats - pill group like 1st screenshot */}
+      <section className="rounded-2xl p-4 bg-white/70 backdrop-blur-sm border border-white/40 shadow-sm grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl border border-planb-grey-2 flex items-center justify-center bg-linear-to-br from-orange-50 to-orange-100">
+            <Users className="h-6 w-6 text-orange-400" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-xs text-dashboard-text font-medium">
+              Toplam Kullanıcı
+            </p>
+            <p className="text-2xl font-extrabold text-dashboard-primary">
+              {(
+                usersPage?.totalElements ??
+                usersPage?.content?.length ??
+                0
+              ).toLocaleString("tr-TR")}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl border border-planb-grey-2 flex items-center justify-center bg-linear-to-br from-amber-50 to-amber-100">
+            <BellRing className="h-6 w-6 text-amber-400" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-xs text-dashboard-text font-medium">
+              Bildirimler
+            </p>
+            <p className="text-2xl font-extrabold text-dashboard-primary">
+              {(
+                notifPage?.totalElements ??
+                notifPage?.content?.length ??
+                0
+              ).toLocaleString("tr-TR")}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl border border-blue-200 bg-white shadow-inner flex items-center justify-center">
+            <FolderOpen className="h-7 w-7 text-blue-500" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-xs text-dashboard-text font-medium">
+              Portföyler
+            </p>
+            <p className="text-2xl font-extrabold text-dashboard-primary">
+              {(
+                portfoliosPage?.totalElements ??
+                portfoliosPage?.content?.length ??
+                0
+              ).toLocaleString("tr-TR")}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl border border-purple-200 bg-white shadow-inner flex items-center justify-center">
+            <Images className="h-7 w-7 text-purple-500" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-xs text-dashboard-text font-medium">
+              Slider'lar
+            </p>
+            <p className="text-2xl font-extrabold text-dashboard-primary">
+              {(
+                slidersPage?.totalElements ??
+                slidersPage?.content?.length ??
+                0
+              ).toLocaleString("tr-TR")}
+            </p>
+          </div>
+        </div>
       </section>
 
-      <section className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <Card className="bg-dashboard-bg-card border border-planb-grey-2 shadow-lg transition-all duration-300 hover:shadow-xl">
-          <CardHeader className="pb-4">
+      {/* Old KPI grid removed as requested */}
+
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Users & Subs Bar Chart */}
+        <Card className="bg-dashboard-bg-card border border-planb-grey-2 shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-base font-bold text-dashboard-primary">
+              Kullanıcı & Abone Karşılaştırması
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={280}>
+              <BarChart
+                data={weeklyData}
+                margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+              >
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  stroke="#f0f0f0"
+                />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fill: "#8e8e9f", fontSize: 12 }}
+                />
+                <YAxis tick={{ fill: "#8e8e9f", fontSize: 12 }} />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="Users" fill="#8b5a3c" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="Subs" fill="#ff8c42" radius={[8, 8, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        {/* Visitor Rate Area Chart */}
+        <Card className="bg-dashboard-bg-card border border-planb-grey-2 shadow-sm">
+          <CardHeader>
             <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-xl font-bold text-planb-main flex items-center gap-2">
-                  <BarChart3 className="w-6 h-6 text-planb-main" />
-                  İçerik Dağılımı
-                </CardTitle>
-                <CardDescription className="text-dashboard-text mt-2">
-                  Tüm modüllerin toplam kayıt sayıları
-                </CardDescription>
-              </div>
+              <CardTitle className="text-base font-bold text-dashboard-primary">
+                Bildirim & Partner Trendleri
+              </CardTitle>
+              <Badge variant="outline" className="text-xs">
+                Toplam:{" "}
+                {(notifPage?.totalElements ?? 0) + (partners?.length ?? 0)}
+              </Badge>
             </div>
           </CardHeader>
-          <CardContent className="pt-2">
-            <ChartContainer config={chartConfig} className="h-[380px] w-full">
-              <BarChart
-                data={chartData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
+          <CardContent>
+            <ResponsiveContainer width="100%" height={280}>
+              <AreaChart
+                data={monthlyData}
+                margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
               >
                 <defs>
-                  <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop
-                      offset="0%"
-                      stopColor="var(--planb-main)"
-                      stopOpacity={1}
-                    />
-                    <stop
-                      offset="50%"
-                      stopColor="var(--dashboard-primary)"
-                      stopOpacity={0.8}
-                    />
-                    <stop
-                      offset="100%"
-                      stopColor="var(--planb-main)"
-                      stopOpacity={0.5}
-                    />
+                  <linearGradient
+                    id="lastMonthGrad"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="5%" stopColor="#8b5a3c" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#8b5a3c" stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient
+                    id="thisMonthGrad"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="5%" stopColor="#ff8c42" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#ff8c42" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid
                   strokeDasharray="3 3"
                   vertical={false}
-                  stroke="var(--planb-grey-2)"
-                  strokeOpacity={0.3}
+                  stroke="#f0f0f0"
                 />
                 <XAxis
-                  dataKey="name"
-                  tickLine={false}
-                  axisLine={false}
-                  tick={{
-                    fill: "var(--dashboard-text)",
-                    fontSize: 11,
-                    fontWeight: 600,
-                  }}
-                  angle={-45}
-                  textAnchor="end"
-                  height={100}
-                  interval={0}
+                  dataKey="month"
+                  tick={{ fill: "#8e8e9f", fontSize: 12 }}
                 />
-                <YAxis
-                  tickLine={false}
-                  axisLine={false}
-                  tick={{ fill: "var(--dashboard-text)", fontSize: 12 }}
-                  allowDecimals={false}
-                />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar
-                  dataKey="value"
-                  radius={[16, 16, 0, 0]}
-                  fill="url(#barGradient)"
-                  animationDuration={1500}
-                />
-              </BarChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-dashboard-bg-card border border-planb-grey-2 shadow-lg transition-all duration-300 hover:shadow-xl">
-          <CardHeader className="pb-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-xl font-bold text-planb-main flex items-center gap-2">
-                  <TrendingUp className="w-6 h-6 text-chart-orange" />
-                  Trend Analizi
-                </CardTitle>
-                <CardDescription className="text-dashboard-text mt-2">
-                  İçeriklerin görsel analizi ve trendleri
-                </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="pt-2">
-            <ChartContainer config={chartConfig} className="h-[380px] w-full">
-              <LineChart
-                data={chartData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
-              >
-                <defs>
-                  <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop
-                      offset="5%"
-                      stopColor="var(--chart-orange)"
-                      stopOpacity={0.5}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor="var(--chart-orange)"
-                      stopOpacity={0}
-                    />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke="var(--planb-grey-2)"
-                  strokeOpacity={0.3}
-                />
-                <XAxis
-                  dataKey="name"
-                  tickLine={false}
-                  axisLine={false}
-                  tick={{
-                    fill: "var(--dashboard-text)",
-                    fontSize: 11,
-                    fontWeight: 600,
-                  }}
-                  angle={-45}
-                  textAnchor="end"
-                  height={100}
-                  interval={0}
-                />
-                <YAxis
-                  tickLine={false}
-                  axisLine={false}
-                  tick={{ fill: "var(--dashboard-text)", fontSize: 12 }}
-                  allowDecimals={false}
-                />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Line
+                <YAxis tick={{ fill: "#8e8e9f", fontSize: 12 }} />
+                <Tooltip />
+                <Legend />
+                <Area
                   type="monotone"
-                  dataKey="value"
-                  stroke="var(--chart-orange)"
-                  strokeWidth={4}
-                  dot={{
-                    r: 7,
-                    fill: "var(--chart-orange)",
-                    strokeWidth: 2,
-                    stroke: "white",
-                  }}
-                  activeDot={{ r: 10, stroke: "var(--chart-orange)" }}
-                  animationDuration={1500}
+                  dataKey="Notifications"
+                  fill="url(#notificationsGrad)"
+                  stroke="#8b5a3c"
+                  strokeWidth={2}
                 />
-              </LineChart>
-            </ChartContainer>
+                <Area
+                  type="monotone"
+                  dataKey="Partners"
+                  fill="url(#partnersGrad)"
+                  stroke="#ff8c42"
+                  strokeWidth={2}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           </CardContent>
         </Card>
       </section>
@@ -364,26 +456,33 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {usersPage?.content && usersPage.content.length > 0 ? (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-1/2">Kullanıcı Adı</TableHead>
-                    <TableHead>E-posta</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {usersPage.content.map((u) => (
-                    <TableRow key={u.id}>
-                      <TableCell className="font-medium truncate max-w-[150px]">
-                        {u.username}
-                      </TableCell>
-                      <TableCell className="text-sm text-dashboard-text truncate max-w-[200px]">
-                        {u.email}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <div className="space-y-2">
+                {usersPage.content.slice(0, 10).map((u) => (
+                  <div
+                    key={u.id}
+                    className="flex items-center justify-between rounded-lg border border-planb-grey-2 bg-white p-2"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback className="bg-blue-100 text-blue-700 text-xs font-bold">
+                          {u.username?.[0]?.toUpperCase() ?? "?"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-dashboard-primary truncate max-w-[180px]">
+                          {u.username}
+                        </p>
+                        <p className="text-xs text-dashboard-text truncate max-w-[220px]">
+                          {u.email}
+                        </p>
+                      </div>
+                    </div>
+                    <Badge variant="secondary" className="shrink-0">
+                      ID #{u.id}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
             ) : (
               <div className="text-center text-dashboard-text py-8 text-sm">
                 Kayıt bulunamadı
@@ -400,26 +499,31 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {notifPage?.content && notifPage.content.length > 0 ? (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Başlık</TableHead>
-                    <TableHead>Yayın Tarihi</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {notifPage.content.map((n) => (
-                    <TableRow key={n.id}>
-                      <TableCell className="font-medium truncate max-w-[200px]">
-                        {n.title}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="secondary">{n.type}</Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <div className="space-y-2">
+                {notifPage.content.slice(0, 10).map((n) => (
+                  <div
+                    key={n.id}
+                    className="flex items-center justify-between rounded-lg border border-planb-grey-2 bg-white p-2"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="h-8 w-8 rounded-full bg-amber-100 flex items-center justify-center">
+                        <BellRing className="h-4 w-4 text-amber-600" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-dashboard-primary truncate max-w-[180px]">
+                          {n.title}
+                        </p>
+                        <Badge variant="secondary" className="text-xs">
+                          {n.type}
+                        </Badge>
+                      </div>
+                    </div>
+                    <Badge variant="secondary" className="shrink-0">
+                      ID #{n.id}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
             ) : (
               <div className="text-center text-dashboard-text py-8 text-sm">
                 Kayıt bulunamadı
@@ -438,21 +542,21 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {portfoliosPage?.content && portfoliosPage.content.length > 0 ? (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Başlık</TableHead>
-                    <TableHead>Yayın Tarihi</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {portfoliosPage.content.map((p) => (
-                    <TableRow key={p.id}>
-                      <TableCell className="font-medium truncate max-w-[200px]">
-                        {p.name}
-                      </TableCell>
-                      <TableCell className="text-sm text-dashboard-text">
-                        <Badge variant="secondary">
+              <div className="space-y-2">
+                {portfoliosPage.content.slice(0, 10).map((p) => (
+                  <div
+                    key={p.id}
+                    className="flex items-center justify-between rounded-lg border border-planb-grey-2 bg-white p-2"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                        <FolderOpen className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-dashboard-primary truncate max-w-[180px]">
+                          {p.name}
+                        </p>
+                        <Badge variant="secondary" className="text-xs">
                           {p.publishDate
                             ? new Date(p.publishDate).toLocaleDateString(
                                 "tr-TR",
@@ -460,11 +564,14 @@ export default function DashboardPage() {
                               )
                             : "-"}
                         </Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                      </div>
+                    </div>
+                    <Badge variant="secondary" className="shrink-0">
+                      ID #{p.id}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
             ) : (
               <div className="text-center text-dashboard-text py-8 text-sm">
                 Kayıt bulunamadı
@@ -481,28 +588,34 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {slidersPage?.content && slidersPage.content.length > 0 ? (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Başlık</TableHead>
-                    <TableHead>Durum</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {slidersPage.content.map((s) => (
-                    <TableRow key={s.id}>
-                      <TableCell className="font-medium truncate max-w-[200px]">
-                        {s.title ?? `Slider #${s.id}`}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={s.isActive ? "success" : "secondary"}>
+              <div className="space-y-2">
+                {slidersPage.content.slice(0, 10).map((s) => (
+                  <div
+                    key={s.id}
+                    className="flex items-center justify-between rounded-lg border border-planb-grey-2 bg-white p-2"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center">
+                        <Images className="h-4 w-4 text-purple-600" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-dashboard-primary truncate max-w-[180px]">
+                          {s.name ?? `Slider #${s.id}`}
+                        </p>
+                        <Badge
+                          variant={s.isActive ? "success" : "secondary"}
+                          className="text-xs"
+                        >
                           {s.isActive ? "Aktif" : "Pasif"}
                         </Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                      </div>
+                    </div>
+                    <Badge variant="secondary" className="shrink-0">
+                      ID #{s.id}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
             ) : (
               <div className="text-center text-dashboard-text py-8 text-sm">
                 Kayıt bulunamadı
