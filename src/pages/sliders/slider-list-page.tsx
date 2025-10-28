@@ -90,7 +90,7 @@ export default function SliderListPage() {
   );
 
   return (
-    <div className="min-h-screen bg-dashboard-bg-main p-6">
+    <div className="min-h-screen p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">

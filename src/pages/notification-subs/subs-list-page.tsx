@@ -95,7 +95,7 @@ export default function SubsListPage() {
   const selectedSub = subs.find((s) => s.id === selectedSubId);
 
   return (
-    <div className="min-h-screen bg-dashboard-bg-main p-6">
+    <div className="min-h-screen p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -157,17 +157,17 @@ export default function SubsListPage() {
         {/* Main Card */}
         <div className="bg-dashboard-bg-card rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-linear-5 p-5">
+          <div className="p-5 bg-linear-to-r from-[#6366f1] to-[#8b5cf6] text-white">
             <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-3 rounded-lg bg-emerald-500/80 backdrop-blur-sm">
+                <div className="p-3 rounded-lg bg-white/20">
                   <UserPlus className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-dashboard-primary mb-1">
+                  <h2 className="text-2xl font-bold mb-1">
                     Bildirim Aboneleri
                   </h2>
-                  <p className="text-sm text-dashboard-text">
+                  <p className="text-sm opacity-90">
                     Bildirim abonelerini yönetin
                   </p>
                 </div>
@@ -175,9 +175,9 @@ export default function SubsListPage() {
               <Link to="/notification-subs/create">
                 <Button
                   size="lg"
-                  className="bg-white/0! hover:bg-gray-100 text-planb-green"
+                  className="rounded-full h-10 px-5 bg-white/0! hover:bg-white/10! text-white! border border-white/40! shadow-sm"
                 >
-                  <Plus className="h-4 w-4 mr-2 text-planb-green" />
+                  <Plus className="h-4 w-4 mr-2 text-white" />
                   Yeni Abone
                 </Button>
               </Link>

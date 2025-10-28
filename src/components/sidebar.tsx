@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useMatch } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
@@ -106,37 +106,32 @@ export default function Sidebar() {
         <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
           {menuItems.map((item) => {
             const Icon = item.icon;
-            const isActive =
-              location.pathname === item.path ||
-              (item.path === "/notifications" &&
-                location.pathname.startsWith("/notifications")) ||
-              (item.path === "/team-members" &&
-                location.pathname.startsWith("/team-members")) ||
-              (item.path === "/services" &&
-                location.pathname.startsWith("/services")) ||
-              (item.path === "/partners" &&
-                location.pathname.startsWith("/partners")) ||
-              (item.path === "/contacts" &&
-                location.pathname.startsWith("/contacts")) ||
-              (item.path === "/tags" &&
-                location.pathname.startsWith("/tags")) ||
-              (item.path === "/sliders" &&
-                location.pathname.startsWith("/sliders")) ||
-              (item.path === "/portfolios" &&
-                location.pathname.startsWith("/portfolios"));
+            const isActive = useMatch({ path: item.path });
 
             return (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl ${
-                  isActive
-                    ? "bg-white text-sidebar-dark-blue shadow-md"
-                    : "text-sidebar-inactive hover:text-sidebar-dark-blue"
+                className={`group flex items-center gap-3 px-4 py-3 rounded-full transition-all duration-200 ${
+                  isActive ? "bg-white shadow-sm" : "hover:bg-white/50"
                 }`}
               >
-                <Icon className={`h-5 w-5 ${item.rotate ? "rotate-45" : ""}`} />
-                <span className="text-sm font-medium">{item.title}</span>
+                <Icon
+                  className={`h-5 w-5 ${item.rotate ? "rotate-45" : ""} ${
+                    isActive
+                      ? "text-dashboard-primary"
+                      : "text-sidebar-inactive group-hover:text-dashboard-primary"
+                  }`}
+                />
+                <span
+                  className={`text-sm font-semibold ${
+                    isActive
+                      ? "text-dashboard-primary"
+                      : "text-sidebar-inactive group-hover:text-dashboard-primary"
+                  }`}
+                >
+                  {item.title}
+                </span>
               </Link>
             );
           })}

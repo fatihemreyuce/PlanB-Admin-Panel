@@ -43,17 +43,9 @@ import PortfolioCreatePage from "@/pages/portfolios/portfolio-create-page";
 import PortfolioEditPage from "@/pages/portfolios/portfolio-edit-page";
 import PortfolioDetailPage from "@/pages/portfolios/portfolio-detail-page";
 import SettingsPage from "@/pages/settings/settings-page";
+import DashboardPage from "@/pages/dashboard";
 
-function Dashboard() {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Hoş Geldiniz!</h1>
-        <p className="text-muted-foreground">Başarıyla giriş yaptınız.</p>
-      </div>
-    </div>
-  );
-}
+// removed inline Dashboard in favor of full page component
 
 function App() {
   return (
@@ -65,7 +57,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route element={<ProtectedRoute />}>
               <Route element={<AdminLayout />}>
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/users" element={<UserListPage />} />
                 <Route path="/users/create" element={<UserCreatePage />} />
                 <Route path="/users/edit/:id" element={<UserEditPage />} />

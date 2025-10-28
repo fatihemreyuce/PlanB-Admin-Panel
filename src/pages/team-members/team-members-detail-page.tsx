@@ -19,7 +19,7 @@ export default function TeamMembersDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-dashboard-bg-main">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-dashboard-primary"></div>
       </div>
     );
@@ -27,7 +27,7 @@ export default function TeamMembersDetailPage() {
 
   if (!member) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-dashboard-bg-main">
+      <div className="min-h-screen flex items-center justify-center">
         <Card>
           <CardHeader>
             <CardTitle>Üye Bulunamadı</CardTitle>
@@ -46,7 +46,7 @@ export default function TeamMembersDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-dashboard-bg-main p-6">
+    <div className="min-h-screen p-6">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="bg-dashboard-bg-card rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">

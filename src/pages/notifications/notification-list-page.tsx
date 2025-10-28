@@ -120,11 +120,11 @@ export default function NotificationListPage() {
   );
 
   return (
-    <div className="min-h-screen bg-dashboard-bg-main p-6">
+    <div className="min-h-screen p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg shadow-sm border border-blue-100 overflow-hidden">
+          <div className="bg-linear-to-br from-blue-50 to-indigo-50 rounded-lg shadow-sm border border-blue-100 overflow-hidden">
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="p-2 rounded-md bg-blue-500">
@@ -142,7 +142,7 @@ export default function NotificationListPage() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg shadow-sm border border-purple-100 overflow-hidden">
+          <div className="bg-linear-to-br from-purple-50 to-pink-50 rounded-lg shadow-sm border border-purple-100 overflow-hidden">
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="p-2 rounded-md bg-purple-500">
@@ -163,7 +163,7 @@ export default function NotificationListPage() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg shadow-sm border border-emerald-100 overflow-hidden">
+          <div className="bg-linear-to-br from-emerald-50 to-teal-50 rounded-lg shadow-sm border border-emerald-100 overflow-hidden">
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="p-2 rounded-md bg-emerald-500">
@@ -185,17 +185,15 @@ export default function NotificationListPage() {
         {/* Main Card */}
         <div className="bg-dashboard-bg-card rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-linear-5 p-5">
+          <div className="p-5 bg-linear-to-r from-[#1e62ff] to-[#0091a9] text-white">
             <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-3 rounded-lg bg-blue-500/80 backdrop-blur-sm">
+                <div className="p-3 rounded-lg bg-white/20">
                   <Bell className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-dashboard-primary mb-1">
-                    Bildirimler
-                  </h2>
-                  <p className="text-sm text-dashboard-text">
+                  <h2 className="text-2xl font-bold mb-1">Bildirimler</h2>
+                  <p className="text-sm opacity-90">
                     Sistem bildirimlerini yönetin
                   </p>
                 </div>
@@ -203,9 +201,9 @@ export default function NotificationListPage() {
               <Link to="/notifications/create">
                 <Button
                   size="lg"
-                  className="bg-white/0! hover:bg-gray-100 text-planb-green "
+                  className="rounded-full h-10 px-5 bg-white/0! hover:bg-white/10! text-white! border border-white/40! shadow-sm"
                 >
-                  <Plus className="h-4 w-4 mr-2 text-planb-green" />
+                  <Plus className="h-4 w-4 mr-2 text-white" />
                   Yeni Bildirim
                 </Button>
               </Link>

@@ -147,7 +147,7 @@ export default function TeamMembersEditPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-dashboard-bg-main">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-dashboard-primary"></div>
       </div>
     );
@@ -155,7 +155,7 @@ export default function TeamMembersEditPage() {
 
   if (!member) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-dashboard-bg-main">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center space-y-4">
           <p className="text-planb-red font-bold">Üye bulunamadı</p>
           <Link to="/team-members">
@@ -169,7 +169,7 @@ export default function TeamMembersEditPage() {
   }
 
   return (
-    <div className="min-h-screen bg-dashboard-bg-main p-6">
+    <div className="min-h-screen p-6">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="bg-dashboard-bg-card rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
