@@ -26,11 +26,29 @@ export const fetchClient = async <T, U>(
   }
 
   if (headers.get("Content-Type") === "multipart/form-data") {
+    try {
+      // eslint-disable-next-line no-console
+      console.debug("[fetchClient] multipart request →", {
+        url,
+        method: requestOptions.method,
+        headers: Object.fromEntries(headers.entries()),
+        bodyKeys: body ? Object.keys(body as Record<string, unknown>) : [],
+      });
+    } catch {}
     headers.delete("Content-Type");
     requestOptions.body = objectToFormData({ ...body });
   } else if (!headers.get("Content-Type")) {
     headers.set("Content-Type", "application/json");
     if (body) {
+      try {
+        // eslint-disable-next-line no-console
+        console.debug("[fetchClient] json request →", {
+          url,
+          method: requestOptions.method,
+          headers: Object.fromEntries(headers.entries()),
+          body,
+        });
+      } catch {}
       if (requestOptions.method?.toUpperCase() === "GET") {
         const [baseUrl, queryString] = url.split("?");
         const existingParams = new URLSearchParams(queryString);
@@ -64,6 +82,16 @@ export const fetchClient = async <T, U>(
   const requestUrl = `/api/v1${url}`;
 
   const response = await fetch(requestUrl, requestOptions);
+
+  try {
+    // eslint-disable-next-line no-console
+    console.debug("[fetchClient] response ←", {
+      url: requestUrl,
+      status: response.status,
+      ok: response.ok,
+      contentType: response.headers.get("content-type"),
+    });
+  } catch {}
 
   if (response.status < 200 || response.status >= 400) {
     if (response.status === 401) {

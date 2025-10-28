@@ -42,6 +42,7 @@ import PortfolioListPage from "@/pages/portfolios/portfolio-list-page";
 import PortfolioCreatePage from "@/pages/portfolios/portfolio-create-page";
 import PortfolioEditPage from "@/pages/portfolios/portfolio-edit-page";
 import PortfolioDetailPage from "@/pages/portfolios/portfolio-detail-page";
+import SettingsPage from "@/pages/settings/settings-page";
 
 function Dashboard() {
   return (
@@ -162,6 +163,7 @@ function App() {
                   path="/portfolios/detail/:id"
                   element={<PortfolioDetailPage />}
                 />
+                <Route path="/settings" element={<SettingsPage />} />
                 <Route
                   path="/"
                   element={<Navigate to="/dashboard" replace />}

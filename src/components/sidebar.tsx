@@ -6,12 +6,13 @@ import {
   LogOut,
   UserPlus,
   UsersRound,
-  Settings,
+  Settings as SettingsIcon,
   Building2,
   Mail,
   Tag,
   Image as ImageIcon,
   Briefcase,
+  Cog,
 } from "lucide-react";
 import { useLoginState } from "@/hooks/use-login-state";
 import { useUserMe } from "@/hooks/use-user";
@@ -54,7 +55,7 @@ export default function Sidebar() {
     },
     {
       title: "Servisler",
-      icon: Settings,
+      icon: SettingsIcon,
       path: "/services",
     },
     {
@@ -81,6 +82,11 @@ export default function Sidebar() {
       title: "Portföyler",
       icon: Briefcase,
       path: "/portfolios",
+    },
+    {
+      title: "Ayarlar",
+      icon: Cog,
+      path: "/settings",
     },
   ];
 
