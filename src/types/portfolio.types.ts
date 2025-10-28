@@ -1,5 +1,5 @@
 export interface Assets {
-  asset: string;
+  asset: string | File;
   isCovered: boolean;
 }
 

@@ -1,10 +1,11 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getSettings, updateSettings } from "@/services/settings-service";
 import { toast } from "sonner";
 import type { SettingsRequest } from "@/types/settings.types";
+import { useAuthQuery } from "./use-auth-query";
 
 export const useSettings = () => {
-  return useQuery({
+  return useAuthQuery({
     queryKey: ["settings"],
     queryFn: () => getSettings(),
   });

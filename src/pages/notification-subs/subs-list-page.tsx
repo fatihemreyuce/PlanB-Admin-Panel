@@ -30,7 +30,6 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
 import { Empty } from "@/components/ui/empty";
 import {
   Table,
@@ -100,7 +99,7 @@ export default function SubsListPage() {
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg shadow-sm border border-emerald-100 overflow-hidden">
+          <div className="bg-linear-to-br from-emerald-50 to-teal-50 rounded-lg shadow-sm border border-emerald-100 overflow-hidden">
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="p-2 rounded-full bg-emerald-500 shadow-sm hover:shadow-md transition-all">
@@ -118,7 +117,7 @@ export default function SubsListPage() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg shadow-sm border border-blue-100 overflow-hidden">
+          <div className="bg-linear-to-br from-blue-50 to-indigo-50 rounded-lg shadow-sm border border-blue-100 overflow-hidden">
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="p-2 rounded-full bg-blue-500 shadow-sm hover:shadow-md transition-all">
@@ -136,7 +135,7 @@ export default function SubsListPage() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg shadow-sm border border-purple-100 overflow-hidden">
+          <div className="bg-linear-to-br from-purple-50 to-pink-50 rounded-lg shadow-sm border border-purple-100 overflow-hidden">
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="p-2 rounded-full bg-purple-500 shadow-sm hover:shadow-md transition-all">

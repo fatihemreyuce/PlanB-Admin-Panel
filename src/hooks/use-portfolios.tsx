@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createPortfolio,
   getPortfolios,
@@ -8,6 +8,7 @@ import {
 } from "@/services/portfolio-service";
 import { toast } from "sonner";
 import type { PortfolioRequest } from "@/types/portfolio.types";
+import { useAuthQuery } from "./use-auth-query";
 
 export const useCreatePortfolio = () => {
   const queryClient = useQueryClient();
@@ -29,14 +30,14 @@ export const usePortfolios = (
   size: number,
   sort: string
 ) => {
-  return useQuery({
+  return useAuthQuery({
     queryKey: ["portfolios", search, page, size, sort],
     queryFn: () => getPortfolios(search, page, size, sort),
   });
 };
 
 export const usePortfolioById = (id: number) => {
-  return useQuery({
+  return useAuthQuery({
     queryKey: ["portfolio", id],
     queryFn: () => getPortfolioById(id),
   });

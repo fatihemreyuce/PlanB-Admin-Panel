@@ -9,8 +9,8 @@ export const notificationCreateSchema = z.object({
     .string()
     .min(20, "İçerik en az 20 karakter olmalıdır")
     .max(2000, "İçerik en fazla 2000 karakter olabilir"),
-  type: z.enum(["EMAIL"], {
-    errorMap: () => ({ message: "Geçerli bir bildirim tipi seçiniz" }),
+  type: z.enum(["EMAIL"]).refine((v) => v === "EMAIL", {
+    message: "Geçerli bir bildirim tipi seçiniz",
   }),
 });
 
@@ -23,8 +23,8 @@ export const notificationUpdateSchema = z.object({
     .string()
     .min(20, "İçerik en az 20 karakter olmalıdır")
     .max(2000, "İçerik en fazla 2000 karakter olabilir"),
-  type: z.enum(["EMAIL"], {
-    errorMap: () => ({ message: "Geçerli bir bildirim tipi seçiniz" }),
+  type: z.enum(["EMAIL"]).refine((v) => v === "EMAIL", {
+    message: "Geçerli bir bildirim tipi seçiniz",
   }),
 });
 

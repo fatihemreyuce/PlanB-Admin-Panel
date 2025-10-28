@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getSubsNotifications,
   deleteSubsNotification,
@@ -6,6 +6,7 @@ import {
 } from "@/services/subs-notifications-service";
 import { toast } from "sonner";
 import type { SubsNotificationRequest } from "@/types/subs-notifications.types";
+import { useAuthQuery } from "./use-auth-query";
 
 export const useCreateNotificationSub = () => {
   const queryClient = useQueryClient();
@@ -27,7 +28,7 @@ export const useGetNotificationSubs = (
   size: number,
   sort: string
 ) => {
-  return useQuery({
+  return useAuthQuery({
     queryKey: ["notification-subs", page, size, sort],
     queryFn: () => getSubsNotifications(page, size, sort),
   });

@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createContact,
   getContacts,
@@ -6,6 +6,7 @@ import {
 } from "@/services/contact-service";
 import { toast } from "sonner";
 import type { ContactRequest } from "@/types/contact.types";
+import { useAuthQuery } from "./use-auth-query";
 
 export const useCreateContact = () => {
   const queryClient = useQueryClient();
@@ -22,7 +23,7 @@ export const useCreateContact = () => {
 };
 
 export const useContacts = (page: number, size: number, sort: string) => {
-  return useQuery({
+  return useAuthQuery({
     queryKey: ["contacts", page, size, sort],
     queryFn: () => getContacts(page, size, sort),
   });

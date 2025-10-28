@@ -2,16 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useGetNotificationById } from "@/hooks/use-notfications";
-import {
-  ArrowLeft,
-  Edit,
-  Mail,
-  Calendar,
-  Bell,
-  Send,
-  Type,
-  FileText,
-} from "lucide-react";
+import { ArrowLeft, Edit, Mail, Bell, Type, FileText } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -54,11 +45,11 @@ export default function NotificationDetailPage() {
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Header */}
         <div className="bg-dashboard-bg-card rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-600 p-8">
+          <div className="bg-linear-to-br from-blue-600 to-indigo-600 p-8">
             <Link to="/notifications">
               <Button
                 size="icon"
-                className="mb-6 !bg-white !text-black hover:!bg-gray-100"
+                className="mb-6 bg-white! text-black! hover:bg-gray-100!"
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
@@ -194,7 +185,7 @@ export default function NotificationDetailPage() {
             </Button>
           </Link>
           <Link to={`/notifications/edit/${notification.id}`}>
-            <Button className="h-12 px-6 bg-gradient-to-r from-blue-600 to-indigo-600! hover:from-blue-700! hover:to-indigo-700! text-white! shadow-sm hover:shadow-lg transition-all font-semibold">
+            <Button className="h-12 px-6 bg-linear-to-r from-blue-600 to-indigo-600! hover:from-blue-700! hover:to-indigo-700! text-white! shadow-sm hover:shadow-lg transition-all font-semibold">
               <Edit className="h-4 w-4 mr-2" />
               Düzenle
             </Button>

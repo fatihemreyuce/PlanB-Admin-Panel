@@ -7,8 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, UserPlus, Mail, Phone, Calendar } from "lucide-react";
+import { ArrowLeft, UserPlus, Mail, Phone } from "lucide-react";
 import { useGetNotificationSubs } from "@/hooks/use-notification-subs";
 
 export default function SubsDetailPage() {
@@ -42,11 +41,11 @@ export default function SubsDetailPage() {
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="bg-dashboard-bg-card rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
-          <div className="bg-gradient-to-br from-emerald-600 to-teal-600 p-8">
+          <div className="bg-linear-to-br from-emerald-600 to-teal-600 p-8">
             <Link to="/notification-subs">
               <Button
                 size="icon"
-                className="mb-6 !bg-white !text-black hover:!bg-gray-100"
+                className="mb-6 bg-white! text-black! hover:bg-gray-100!"
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>

@@ -108,7 +108,7 @@ export default function ServiceCreatePage() {
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="bg-dashboard-bg-card rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
-          <div className="bg-gradient-to-br from-sky-600 to-blue-600 p-8">
+          <div className="bg-linear-to-br from-sky-600 to-blue-600 p-8">
             <div className="flex items-center gap-4">
               <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-sm">
                 <Settings className="h-8 w-8 text-white" />
@@ -242,7 +242,7 @@ export default function ServiceCreatePage() {
                 <Button
                   type="submit"
                   disabled={createServiceMutation.isPending}
-                  className="h-12 px-8 font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
+                  className="h-12 px-8 font-semibold bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
                 >
                   {createServiceMutation.isPending ? (
                     <>

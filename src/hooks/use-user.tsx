@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getUsers,
   createUser,
@@ -9,9 +9,10 @@ import {
 } from "@/services/user-service";
 import type { UserRequest } from "@/types/user.types";
 import { toast } from "sonner";
+import { useAuthQuery } from "./use-auth-query";
 
 export const useUserMe = () => {
-  return useQuery({
+  return useAuthQuery({
     queryKey: ["user-me"],
     queryFn: () => getUserMe(),
   });
@@ -23,7 +24,7 @@ export const useUsers = (
   size: number,
   sort: string
 ) => {
-  return useQuery({
+  return useAuthQuery({
     queryKey: ["users", search, page, size, sort],
     queryFn: () => getUsers(search, page, size, sort),
   });
@@ -73,7 +74,7 @@ export const useDeleteUser = () => {
 };
 
 export const useGetUserById = (id: number) => {
-  return useQuery({
+  return useAuthQuery({
     queryKey: ["user", id],
     queryFn: () => getUserById(id),
   });

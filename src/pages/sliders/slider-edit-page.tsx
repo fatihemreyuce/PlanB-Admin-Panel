@@ -102,7 +102,7 @@ export default function SliderEditPage() {
       name,
       description,
       excerpt,
-      image: imageFile || "",
+      image: imageFile || undefined,
       tagIds: selectedTagIds,
     };
 

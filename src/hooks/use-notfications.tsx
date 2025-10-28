@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getNotifications,
   createNotification,
@@ -9,16 +9,17 @@ import {
 } from "@/services/notifications-service";
 import type { NotificationRequest } from "@/types/notifications.types";
 import { toast } from "sonner";
+import { useAuthQuery } from "./use-auth-query";
 
 export const useNotifications = (page: number, size: number, sort: string) => {
-  return useQuery({
+  return useAuthQuery({
     queryKey: ["notifications", page, size, sort],
     queryFn: () => getNotifications(page, size, sort),
   });
 };
 
 export const useGetNotificationById = (id: number) => {
-  return useQuery({
+  return useAuthQuery({
     queryKey: ["notification", id],
     queryFn: () => getNotificationById(id),
   });

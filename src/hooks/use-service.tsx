@@ -8,6 +8,7 @@ import {
 } from "@/services/service-service";
 import { toast } from "sonner";
 import type { ServiceRequest } from "@/types/service.types";
+import { useAuthQuery } from "./use-auth-query";
 
 export const useCreateService = () => {
   const queryClient = useQueryClient();
@@ -29,14 +30,14 @@ export const useServices = (
   size: number,
   sort: string
 ) => {
-  return useQuery({
+  return useAuthQuery({
     queryKey: ["services", search, page, size, sort],
     queryFn: () => getServices(search, page, size, sort),
   });
 };
 
 export const useServiceById = (id: number) => {
-  return useQuery({
+  return useAuthQuery({
     queryKey: ["service", id],
     queryFn: () => getServiceById(id),
   });
