@@ -52,7 +52,7 @@ function App() {
     <QueryProvider>
       <LoginProvider>
         <BrowserRouter>
-          <Toaster position="top-right" />
+          <Toaster position="bottom-right" />
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route element={<ProtectedRoute />}>
