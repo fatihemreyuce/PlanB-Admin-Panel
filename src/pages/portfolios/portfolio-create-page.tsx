@@ -258,7 +258,7 @@ export default function PortfolioCreatePage() {
                         className="fixed inset-0 z-40 bg-black/20"
                         onClick={() => setCalendarOpen(false)}
                       />
-                      <div className="absolute z-50 mt-2 w-96 rounded-xl border border-planb-grey-2 bg-dashboard-bg-card shadow-2xl ring-1 ring-black/5 overflow-hidden">
+                      <div className="absolute z-50 mt-2 w-96 rounded-xl border border-planb-grey-2 bg-white shadow-lg">
                         <Calendar
                           mode="single"
                           selected={

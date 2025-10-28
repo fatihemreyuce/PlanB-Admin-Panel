@@ -10,13 +10,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Calendar } from "@/components/ui/calendar";
 import { usePortfolioById, useUpdatePortfolio } from "@/hooks/use-portfolios";
 import {
   Briefcase,
   Upload,
   X,
   Hash,
-  Calendar,
+  Calendar as CalendarIcon,
   Link as LinkIcon,
   Bookmark,
   Check,
@@ -46,6 +47,7 @@ export default function PortfolioEditPage() {
   const [errors, setErrors] = useState<
     Partial<Record<keyof PortfolioUpdateFormData, string>>
   >({});
+  const [calendarOpen, setCalendarOpen] = useState(false);
 
   useEffect(() => {
     if (portfolio) {
@@ -274,16 +276,58 @@ export default function PortfolioEditPage() {
                   htmlFor="publishDate"
                   className="flex items-center gap-2"
                 >
-                  <Calendar className="h-4 w-4 text-violet-600" />
+                  <CalendarIcon className="h-4 w-4 text-violet-600" />
                   Yayın Tarihi <span className="text-red-500">*</span>
                 </Label>
-                <Input
-                  id="publishDate"
-                  type="date"
-                  value={publishDate}
-                  onChange={(e) => setPublishDate(e.target.value)}
-                  className="h-12"
-                />
+                <div className="relative">
+                  <Input
+                    id="publishDate"
+                    placeholder="gg.aa.yyyy"
+                    value={
+                      publishDate
+                        ? new Date(publishDate).toLocaleDateString("tr-TR")
+                        : ""
+                    }
+                    onFocus={() => setCalendarOpen(true)}
+                    onClick={() => setCalendarOpen(true)}
+                    readOnly
+                    className="h-12 cursor-pointer bg-white! border-2! border-planb-grey-2! pr-10 focus:border-violet-500"
+                  />
+                  <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                    <CalendarIcon className="h-4 w-4" />
+                  </span>
+                  {calendarOpen && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-40 bg-black/20"
+                        onClick={() => setCalendarOpen(false)}
+                      />
+                      <div className="absolute z-50 mt-2 w-96 rounded-xl border border-planb-grey-2 bg-white shadow-lg">
+                        <Calendar
+                          mode="single"
+                          selected={
+                            publishDate ? new Date(publishDate) : undefined
+                          }
+                          onSelect={(date) => {
+                            if (date) {
+                              const yyyy = date.getFullYear();
+                              const mm = String(date.getMonth() + 1).padStart(
+                                2,
+                                "0"
+                              );
+                              const dd = String(date.getDate()).padStart(
+                                2,
+                                "0"
+                              );
+                              setPublishDate(`${yyyy}-${mm}-${dd}`);
+                              setCalendarOpen(false);
+                            }
+                          }}
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
                 {errors.publishDate && (
                   <p className="text-sm text-planb-red font-medium">
                     {errors.publishDate}
