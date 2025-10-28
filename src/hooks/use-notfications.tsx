@@ -29,11 +29,11 @@ export const useCreateNotification = () => {
   return useMutation({
     mutationFn: (request: NotificationRequest) => createNotification(request),
     onSuccess: () => {
-      toast.success("Notification created successfully");
+      toast.success("Bildirim başarıyla oluşturuldu");
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
     onError: () => {
-      toast.error("Failed to create notification");
+      toast.error("Bildirim oluşturulurken bir hata oluştu");
     },
   });
 };
@@ -43,11 +43,11 @@ export const useCreateNotificationById = (id: number) => {
   return useMutation({
     mutationFn: () => createNotificationById(id),
     onSuccess: () => {
-      toast.success("Notification created successfully");
+      toast.success("Bildirim başarıyla gönderildi");
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
     onError: () => {
-      toast.error("Failed to create notification");
+      toast.error("Bildirim gönderilirken bir hata oluştu");
     },
   });
 };
@@ -63,11 +63,11 @@ export const useUpdateNotification = () => {
       request: NotificationRequest;
     }) => updateNotification(id, request),
     onSuccess: () => {
-      toast.success("Notification updated successfully");
+      toast.success("Bildirim başarıyla güncellendi");
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
     onError: () => {
-      toast.error("Failed to update notification");
+      toast.error("Bildirim güncellenirken bir hata oluştu");
     },
   });
 };
@@ -77,11 +77,11 @@ export const useDeleteNotification = () => {
   return useMutation({
     mutationFn: (id: number) => deleteNotification(id),
     onSuccess: () => {
-      toast.success("Notification deleted successfully");
+      toast.success("Bildirim başarıyla silindi");
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
     onError: () => {
-      toast.error("Failed to delete notification");
+      toast.error("Bildirim silinirken bir hata oluştu");
     },
   });
 };

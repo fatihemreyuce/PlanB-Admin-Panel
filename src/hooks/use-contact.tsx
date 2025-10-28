@@ -12,11 +12,11 @@ export const useCreateContact = () => {
   return useMutation({
     mutationFn: (request: ContactRequest) => createContact(request),
     onSuccess: () => {
-      toast.success("Contact created successfully");
+      toast.success("Mesaj başarıyla oluşturuldu");
       queryClient.invalidateQueries({ queryKey: ["contacts"] });
     },
     onError: () => {
-      toast.error("Failed to create contact");
+      toast.error("Mesaj oluşturulurken bir hata oluştu");
     },
   });
 };
@@ -33,11 +33,11 @@ export const useDeleteContact = () => {
   return useMutation({
     mutationFn: (id: number) => deleteContact(id),
     onSuccess: () => {
-      toast.success("Contact deleted successfully");
+      toast.success("Mesaj başarıyla silindi");
       queryClient.invalidateQueries({ queryKey: ["contacts"] });
     },
     onError: () => {
-      toast.error("Failed to delete contact");
+      toast.error("Mesaj silinirken bir hata oluştu");
     },
   });
 };

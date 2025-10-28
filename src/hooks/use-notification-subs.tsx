@@ -17,7 +17,7 @@ export const useCreateNotificationSub = () => {
       queryClient.invalidateQueries({ queryKey: ["notification-subs"] });
     },
     onError: () => {
-      toast.error("Failed to create notification subscribers");
+      toast.error("Bildirim aboneliği oluşturulurken bir hata oluştu");
     },
   });
 };
@@ -42,7 +42,7 @@ export const useDeleteNotificationSub = () => {
       queryClient.invalidateQueries({ queryKey: ["notification-subs"] });
     },
     onError: () => {
-      toast.error("Failed to delete notification subscribers");
+      toast.error("Bildirim aboneliği silinirken bir hata oluştu");
     },
   });
 };

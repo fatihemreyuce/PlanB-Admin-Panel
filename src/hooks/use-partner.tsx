@@ -14,11 +14,11 @@ export const useCreatePartner = () => {
   return useMutation({
     mutationFn: (request: PartnerRequest) => createPartner(request),
     onSuccess: () => {
-      toast.success("Partner created successfully");
+      toast.success("Partner başarıyla oluşturuldu");
       queryClient.invalidateQueries({ queryKey: ["partners"] });
     },
     onError: () => {
-      toast.error("Failed to create partner");
+      toast.error("Partner oluşturulurken bir hata oluştu");
     },
   });
 };
@@ -36,11 +36,11 @@ export const useUpdatePartner = () => {
     mutationFn: ({ id, request }: { id: number; request: PartnerRequest }) =>
       updatePartner(id, request),
     onSuccess: () => {
-      toast.success("Partner updated successfully");
+      toast.success("Partner başarıyla güncellendi");
       queryClient.invalidateQueries({ queryKey: ["partners"] });
     },
     onError: () => {
-      toast.error("Failed to update partner");
+      toast.error("Partner güncellenirken bir hata oluştu");
     },
   });
 };
@@ -50,11 +50,11 @@ export const useDeletePartner = () => {
   return useMutation({
     mutationFn: (id: number) => deletePartner(id),
     onSuccess: () => {
-      toast.success("Partner deleted successfully");
+      toast.success("Partner başarıyla silindi");
       queryClient.invalidateQueries({ queryKey: ["partners"] });
     },
     onError: () => {
-      toast.error("Failed to delete partner");
+      toast.error("Partner silinirken bir hata oluştu");
     },
   });
 };

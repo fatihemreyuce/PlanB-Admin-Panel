@@ -9,6 +9,9 @@ import {
   Settings,
   Building2,
   Mail,
+  Tag,
+  Image as ImageIcon,
+  Briefcase,
 } from "lucide-react";
 import { useLoginState } from "@/hooks/use-login-state";
 import { useUserMe } from "@/hooks/use-user";
@@ -64,6 +67,21 @@ export default function Sidebar() {
       icon: Mail,
       path: "/contacts",
     },
+    {
+      title: "Etiketler",
+      icon: Tag,
+      path: "/tags",
+    },
+    {
+      title: "Slider'lar",
+      icon: ImageIcon,
+      path: "/sliders",
+    },
+    {
+      title: "Portföyler",
+      icon: Briefcase,
+      path: "/portfolios",
+    },
   ];
 
   return (
@@ -93,7 +111,13 @@ export default function Sidebar() {
               (item.path === "/partners" &&
                 location.pathname.startsWith("/partners")) ||
               (item.path === "/contacts" &&
-                location.pathname.startsWith("/contacts"));
+                location.pathname.startsWith("/contacts")) ||
+              (item.path === "/tags" &&
+                location.pathname.startsWith("/tags")) ||
+              (item.path === "/sliders" &&
+                location.pathname.startsWith("/sliders")) ||
+              (item.path === "/portfolios" &&
+                location.pathname.startsWith("/portfolios"));
 
             return (
               <Link
@@ -118,7 +142,7 @@ export default function Sidebar() {
           {currentUser && (
             <div className="bg-white/60 backdrop-blur-sm rounded-xl p-2.5 border border-white/20">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-sidebar-dark-blue to-dashboard-accent text-white flex items-center justify-center font-bold text-xs shadow-sm">
+                <div className="w-9 h-9 rounded-lg bg-linear-to-br from-sidebar-dark-blue to-dashboard-accent text-white flex items-center justify-center font-bold text-xs shadow-sm">
                   {currentUser.username[0].toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">

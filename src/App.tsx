@@ -30,6 +30,18 @@ import PartnerEditPage from "@/pages/partners/partner-edit-page";
 import PartnerDetailPage from "@/pages/partners/partner-detail-page";
 import ContactListPage from "@/pages/contacts/contact-list-page";
 import ContactCreatePage from "@/pages/contacts/contact-create-page";
+import TagListPage from "@/pages/tags/tag-list-page";
+import TagCreatePage from "@/pages/tags/tag-create-page";
+import TagEditPage from "@/pages/tags/tag-edit-page";
+import TagDetailPage from "@/pages/tags/tag-detail-page";
+import SliderListPage from "@/pages/sliders/slider-list-page";
+import SliderCreatePage from "@/pages/sliders/slider-create-page";
+import SliderEditPage from "@/pages/sliders/slider-edit-page";
+import SliderDetailPage from "@/pages/sliders/slider-detail-page";
+import PortfolioListPage from "@/pages/portfolios/portfolio-list-page";
+import PortfolioCreatePage from "@/pages/portfolios/portfolio-create-page";
+import PortfolioEditPage from "@/pages/portfolios/portfolio-edit-page";
+import PortfolioDetailPage from "@/pages/portfolios/portfolio-detail-page";
 
 function Dashboard() {
   return (
@@ -125,6 +137,30 @@ function App() {
                 <Route
                   path="/contacts/create"
                   element={<ContactCreatePage />}
+                />
+                <Route path="/tags" element={<TagListPage />} />
+                <Route path="/tags/create" element={<TagCreatePage />} />
+                <Route path="/tags/edit/:id" element={<TagEditPage />} />
+                <Route path="/tags/detail/:id" element={<TagDetailPage />} />
+                <Route path="/sliders" element={<SliderListPage />} />
+                <Route path="/sliders/create" element={<SliderCreatePage />} />
+                <Route path="/sliders/edit/:id" element={<SliderEditPage />} />
+                <Route
+                  path="/sliders/detail/:id"
+                  element={<SliderDetailPage />}
+                />
+                <Route path="/portfolios" element={<PortfolioListPage />} />
+                <Route
+                  path="/portfolios/create"
+                  element={<PortfolioCreatePage />}
+                />
+                <Route
+                  path="/portfolios/edit/:id"
+                  element={<PortfolioEditPage />}
+                />
+                <Route
+                  path="/portfolios/detail/:id"
+                  element={<PortfolioDetailPage />}
                 />
                 <Route
                   path="/"
