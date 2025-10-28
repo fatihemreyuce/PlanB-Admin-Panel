@@ -317,7 +317,7 @@ export default function SliderListPage() {
                           </div>
                         </TableCell>
                         <TableCell className="py-3">
-                          <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
+                          <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100">
                             {slider.id}
                           </Badge>
                         </TableCell>

@@ -302,12 +302,12 @@ export default function PortfolioListPage() {
                           </div>
                         </TableCell>
                         <TableCell className="py-3">
-                          <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100">
+                          <Badge className="bg-cyan-100 text-cyan-700 hover:bg-cyan-100">
                             {portfolio.assets?.length || 0} resim
                           </Badge>
                         </TableCell>
                         <TableCell className="py-3">
-                          <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
+                          <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100">
                             {portfolio.id}
                           </Badge>
                         </TableCell>

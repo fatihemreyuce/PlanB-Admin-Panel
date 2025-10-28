@@ -74,7 +74,7 @@ export default function Sidebar() {
       path: "/tags",
     },
     {
-      title: "Slider'lar",
+      title: "Slider",
       icon: ImageIcon,
       path: "/sliders",
     },

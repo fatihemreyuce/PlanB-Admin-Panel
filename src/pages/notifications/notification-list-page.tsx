@@ -142,10 +142,10 @@ export default function NotificationListPage() {
             </div>
           </div>
 
-          <div className="bg-linear-to-br from-purple-50 to-pink-50 rounded-lg shadow-sm border border-purple-100 overflow-hidden">
+          <div className="bg-linear-to-br from-orange-50 to-amber-50 rounded-lg shadow-sm border border-orange-100 overflow-hidden">
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
-                <div className="p-2 rounded-md bg-purple-500">
+                <div className="p-2 rounded-md bg-orange-500">
                   <Mail className="h-5 w-5 text-white" />
                 </div>
               </div>
@@ -153,7 +153,7 @@ export default function NotificationListPage() {
                 <p className="text-xs text-slate-600 font-medium mb-1">
                   Email Bildirim
                 </p>
-                <p className="text-2xl font-bold text-purple-600">
+                <p className="text-2xl font-bold text-orange-600">
                   {
                     filteredNotifications.filter((n) => n.type === "EMAIL")
                       .length
@@ -313,7 +313,7 @@ export default function NotificationListPage() {
                           </div>
                         </TableCell>
                         <TableCell className="py-3">
-                          <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
+                          <Badge className="bg-orange-100 text-orange-700 hover:bg-orange-100">
                             <Mail className="h-3 w-3 mr-1" />
                             {notification.type}
                           </Badge>

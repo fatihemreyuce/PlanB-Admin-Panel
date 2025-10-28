@@ -341,12 +341,14 @@ export default function SettingsPage() {
                 </Label>
                 <Select
                   value={form.maintenanceMode ? "true" : "false"}
-                  onValueChange={(v) =>
-                    handleChange("maintenanceMode", v === "true")
-                  }
+                  onValueChange={(v) => {
+                    handleChange("maintenanceMode", v === "true");
+                  }}
                 >
-                  <SelectTrigger className="w-48 h-10 bg-white! border-2! border-planb-grey-2!">
-                    <SelectValue />
+                  <SelectTrigger className="w-48 h-10 bg-white! border-2! border-planb-grey-2! text-dashboard-primary!">
+                    <span className="flex-1 text-left">
+                      {form.maintenanceMode ? "Açık" : "Kapalı"}
+                    </span>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="false">Kapalı</SelectItem>

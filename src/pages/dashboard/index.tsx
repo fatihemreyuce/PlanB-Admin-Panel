@@ -456,36 +456,42 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {usersPage?.content && usersPage.content.length > 0 ? (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {usersPage.content.slice(0, 10).map((u) => (
                   <div
                     key={u.id}
-                    className="flex items-center justify-between rounded-lg border border-planb-grey-2 bg-white p-2"
+                    className="flex items-center justify-between rounded-xl border-2 border-planb-grey-2 bg-white p-3 shadow-sm hover:shadow-md transition-all hover:border-orange-300"
                   >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <Avatar className="h-8 w-8">
-                        <AvatarFallback className="bg-blue-100 text-blue-700 text-xs font-bold">
+                    <div className="flex items-center gap-4 min-w-0 flex-1">
+                      <Avatar className="h-12 w-12 rounded-full shadow-md ring-2 ring-orange-200 ring-offset-2 ring-offset-white">
+                        <AvatarFallback className="bg-linear-to-br from-orange-400 via-orange-500 to-orange-600 text-white text-sm font-bold">
                           {u.username?.[0]?.toUpperCase() ?? "?"}
                         </AvatarFallback>
                       </Avatar>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-dashboard-primary truncate max-w-[180px]">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-bold text-dashboard-primary truncate mb-1">
                           {u.username}
                         </p>
-                        <p className="text-xs text-dashboard-text truncate max-w-[220px]">
+                        <p className="text-xs text-dashboard-text truncate">
                           {u.email}
                         </p>
                       </div>
                     </div>
-                    <Badge variant="secondary" className="shrink-0">
-                      ID #{u.id}
+                    <Badge
+                      variant="secondary"
+                      className="shrink-0 text-xs px-3 py-1 font-semibold bg-orange-50 text-orange-700 border-orange-200"
+                    >
+                      #{u.id}
                     </Badge>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-center text-dashboard-text py-8 text-sm">
-                Kayıt bulunamadı
+              <div className="text-center text-dashboard-text py-12 text-sm">
+                <div className="p-4 bg-gray-50 rounded-lg inline-block">
+                  <Users className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                  Kayıt bulunamadı
+                </div>
               </div>
             )}
           </CardContent>
@@ -499,34 +505,43 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {notifPage?.content && notifPage.content.length > 0 ? (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {notifPage.content.slice(0, 10).map((n) => (
                   <div
                     key={n.id}
-                    className="flex items-center justify-between rounded-lg border border-planb-grey-2 bg-white p-2"
+                    className="flex items-center justify-between rounded-xl border-2 border-planb-grey-2 bg-white p-3 shadow-sm hover:shadow-md transition-all hover:border-amber-300"
                   >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="h-8 w-8 rounded-full bg-amber-100 flex items-center justify-center">
-                        <BellRing className="h-4 w-4 text-amber-600" />
+                    <div className="flex items-center gap-4 min-w-0 flex-1">
+                      <div className="h-10 w-10 rounded-xl bg-linear-to-br from-amber-50 to-amber-100 border border-amber-200 flex items-center justify-center shadow-sm">
+                        <BellRing className="h-5 w-5 text-amber-600" />
                       </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-dashboard-primary truncate max-w-[180px]">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-bold text-dashboard-primary truncate mb-1">
                           {n.title}
                         </p>
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge
+                          variant="secondary"
+                          className="text-[10px] px-2 py-0.5"
+                        >
                           {n.type}
                         </Badge>
                       </div>
                     </div>
-                    <Badge variant="secondary" className="shrink-0">
-                      ID #{n.id}
+                    <Badge
+                      variant="secondary"
+                      className="shrink-0 text-xs px-3 py-1 font-semibold bg-amber-50 text-amber-700 border-amber-200"
+                    >
+                      #{n.id}
                     </Badge>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-center text-dashboard-text py-8 text-sm">
-                Kayıt bulunamadı
+              <div className="text-center text-dashboard-text py-12 text-sm">
+                <div className="p-4 bg-gray-50 rounded-lg inline-block">
+                  <BellRing className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                  Kayıt bulunamadı
+                </div>
               </div>
             )}
           </CardContent>
@@ -542,21 +557,24 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {portfoliosPage?.content && portfoliosPage.content.length > 0 ? (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {portfoliosPage.content.slice(0, 10).map((p) => (
                   <div
                     key={p.id}
-                    className="flex items-center justify-between rounded-lg border border-planb-grey-2 bg-white p-2"
+                    className="flex items-center justify-between rounded-xl border-2 border-planb-grey-2 bg-white p-3 shadow-sm hover:shadow-md transition-all hover:border-blue-300"
                   >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-                        <FolderOpen className="h-4 w-4 text-blue-600" />
+                    <div className="flex items-center gap-4 min-w-0 flex-1">
+                      <div className="h-10 w-10 rounded-xl bg-linear-to-br from-blue-50 to-blue-100 border border-blue-200 flex items-center justify-center shadow-sm">
+                        <FolderOpen className="h-5 w-5 text-blue-600" />
                       </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-dashboard-primary truncate max-w-[180px]">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-bold text-dashboard-primary truncate mb-1">
                           {p.name}
                         </p>
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge
+                          variant="secondary"
+                          className="text-[10px] px-2 py-0.5"
+                        >
                           {p.publishDate
                             ? new Date(p.publishDate).toLocaleDateString(
                                 "tr-TR",
@@ -566,15 +584,21 @@ export default function DashboardPage() {
                         </Badge>
                       </div>
                     </div>
-                    <Badge variant="secondary" className="shrink-0">
-                      ID #{p.id}
+                    <Badge
+                      variant="secondary"
+                      className="shrink-0 text-xs px-3 py-1 font-semibold bg-blue-50 text-blue-700 border-blue-200"
+                    >
+                      #{p.id}
                     </Badge>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-center text-dashboard-text py-8 text-sm">
-                Kayıt bulunamadı
+              <div className="text-center text-dashboard-text py-12 text-sm">
+                <div className="p-4 bg-gray-50 rounded-lg inline-block">
+                  <FolderOpen className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                  Kayıt bulunamadı
+                </div>
               </div>
             )}
           </CardContent>
@@ -588,37 +612,43 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {slidersPage?.content && slidersPage.content.length > 0 ? (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {slidersPage.content.slice(0, 10).map((s) => (
                   <div
                     key={s.id}
-                    className="flex items-center justify-between rounded-lg border border-planb-grey-2 bg-white p-2"
+                    className="flex items-center justify-between rounded-xl border-2 border-planb-grey-2 bg-white p-3 shadow-sm hover:shadow-md transition-all hover:border-purple-300"
                   >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center">
-                        <Images className="h-4 w-4 text-purple-600" />
+                    <div className="flex items-center gap-4 min-w-0 flex-1">
+                      <div className="h-10 w-10 rounded-xl bg-linear-to-br from-purple-50 to-purple-100 border border-purple-200 flex items-center justify-center shadow-sm">
+                        <Images className="h-5 w-5 text-purple-600" />
                       </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-dashboard-primary truncate max-w-[180px]">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-bold text-dashboard-primary truncate mb-1">
                           {s.name ?? `Slider #${s.id}`}
                         </p>
                         <Badge
                           variant={s.isActive ? "success" : "secondary"}
-                          className="text-xs"
+                          className="text-[10px] px-2 py-0.5"
                         >
                           {s.isActive ? "Aktif" : "Pasif"}
                         </Badge>
                       </div>
                     </div>
-                    <Badge variant="secondary" className="shrink-0">
-                      ID #{s.id}
+                    <Badge
+                      variant="secondary"
+                      className="shrink-0 text-xs px-3 py-1 font-semibold bg-purple-50 text-purple-700 border-purple-200"
+                    >
+                      #{s.id}
                     </Badge>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-center text-dashboard-text py-8 text-sm">
-                Kayıt bulunamadı
+              <div className="text-center text-dashboard-text py-12 text-sm">
+                <div className="p-4 bg-gray-50 rounded-lg inline-block">
+                  <Images className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                  Kayıt bulunamadı
+                </div>
               </div>
             )}
           </CardContent>

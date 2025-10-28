@@ -136,7 +136,7 @@ export default function PortfolioCreatePage() {
   };
 
   return (
-    <div className="min-h-screen bg-dashboard-bg-main p-6">
+    <div className="min-h-screen p-6">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="bg-dashboard-bg-card rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">

@@ -91,14 +91,19 @@ export default function PortfolioEditPage() {
     );
   };
 
+  const sanitizeExistingAssetName = (name: string): string => {
+    // Remove any absolute URL parts like http://host/uploads/
+    return name.replace(/https?:\/\/[^_]+\/uploads\//, "");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
 
-    const assetsData: Assets[] = assets.map((asset) => ({
-      asset: asset.file,
-      isCovered: asset.isCovered,
-    }));
+    // Backend expects MultipartFile; send only newly added files
+    const assetsData: Assets[] = assets
+      .filter((asset) => asset.isNew)
+      .map((asset) => ({ asset: asset.file, isCovered: asset.isCovered }));
 
     const formData: PortfolioUpdateFormData = {
       name,
