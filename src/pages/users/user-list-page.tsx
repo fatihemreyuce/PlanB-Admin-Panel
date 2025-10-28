@@ -422,8 +422,15 @@ export default function UserListPage() {
                 </Button>
                 <Button
                   onClick={handleDelete}
-                  disabled={deleteUserMutation.isPending}
-                  className="bg-linear-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white px-8 h-11 font-semibold shadow-lg hover:shadow-xl transition-all"
+                  disabled={
+                    deleteUserMutation.isPending ||
+                    confirmText !== selectedUser?.username
+                  }
+                  className={
+                    confirmText === selectedUser?.username
+                      ? "bg-linear-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white px-8 h-11 font-semibold shadow-lg hover:shadow-xl transition-all"
+                      : "bg-black/20! text-gray-600! px-8 h-11 font-semibold cursor-not-allowed"
+                  }
                 >
                   {deleteUserMutation.isPending ? (
                     <>
@@ -432,7 +439,13 @@ export default function UserListPage() {
                     </>
                   ) : (
                     <>
-                      <Trash2 className="h-4 w-4 mr-2" />
+                      <Trash2
+                        className={`h-4 w-4 mr-2 ${
+                          confirmText === selectedUser?.username
+                            ? "text-white"
+                            : "text-red-300"
+                        }`}
+                      />
                       Sil
                     </>
                   )}
