@@ -1,13 +1,6 @@
 import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  ArrowLeft,
-  UserPlus,
-  Users,
-  Upload,
-  X,
-  Image as ImageIcon,
-} from "lucide-react";
+import { UserPlus, Upload, X, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,7 +21,7 @@ export default function TeamMembersCreatePage() {
   const [quote, setQuote] = useState("");
   const [linkedinUrl, setLinkedinUrl] = useState("");
   const [orderNumber, setOrderNumber] = useState(1);
-  const [profilePhoto, setProfilePhoto] = useState("");
+  // removed unused base64 string state; we use File instead
   const [profilePhotoFile, setProfilePhotoFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -46,7 +39,6 @@ export default function TeamMembersCreatePage() {
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreview(reader.result as string);
-      setProfilePhoto(reader.result as string);
     };
     reader.readAsDataURL(file);
   };
@@ -76,7 +68,6 @@ export default function TeamMembersCreatePage() {
   const handleRemove = () => {
     setProfilePhotoFile(null);
     setPreview(null);
-    setProfilePhoto("");
     if (inputRef.current) inputRef.current.value = "";
   };
 
@@ -116,7 +107,7 @@ export default function TeamMembersCreatePage() {
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="bg-dashboard-bg-card rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
-          <div className="bg-gradient-to-br from-sky-600 to-blue-600 p-8">
+          <div className="bg-linear-to-br from-sky-600 to-blue-600 p-8">
             <div className="flex items-center gap-4">
               <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-sm">
                 <UserPlus className="h-8 w-8 text-white" />
@@ -295,7 +286,7 @@ export default function TeamMembersCreatePage() {
                 <Button
                   type="submit"
                   disabled={createMemberMutation.isPending}
-                  className="h-12 px-8 font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
+                  className="h-12 px-8 font-semibold bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
                 >
                   {createMemberMutation.isPending ? (
                     <>

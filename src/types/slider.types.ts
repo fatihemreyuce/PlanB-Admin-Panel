@@ -15,4 +15,5 @@ export interface SliderResponse {
   excerpt: string;
   image: string;
   tags: TagResponse[];
+  isActive?: boolean;
 }

@@ -58,7 +58,7 @@ export default function PortfolioEditPage() {
       setPublishDate(portfolio.publishDate);
       setAssets(
         portfolio.assets?.map((a) => ({
-          file: new File([], a.asset),
+          file: typeof a.asset === "string" ? new File([], a.asset) : a.asset,
           isCovered: a.isCovered,
           isNew: false,
         })) || []
@@ -93,10 +93,7 @@ export default function PortfolioEditPage() {
     );
   };
 
-  const sanitizeExistingAssetName = (name: string): string => {
-    // Remove any absolute URL parts like http://host/uploads/
-    return name.replace(/https?:\/\/[^_]+\/uploads\//, "");
-  };
+  // removed unused sanitizeExistingAssetName helper
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

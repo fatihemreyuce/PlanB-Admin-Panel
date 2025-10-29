@@ -1,18 +1,6 @@
 import { useMemo } from "react";
+import { Users, BellRing, FolderOpen, Images } from "lucide-react";
 import {
-  TrendingUp,
-  Users,
-  BellRing,
-  Briefcase,
-  BarChart3,
-  TrendingDown,
-  Eye,
-  FolderOpen,
-  Images,
-} from "lucide-react";
-import {
-  LineChart,
-  Line,
   BarChart,
   Bar,
   CartesianGrid,
@@ -24,28 +12,9 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "@/components/ui/chart";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+// Table components removed (not used)
 import { useUsers } from "@/hooks/use-user";
 import { useNotifications } from "@/hooks/use-notfications";
 import { usePortfolios } from "@/hooks/use-portfolios";
@@ -61,112 +30,7 @@ export default function DashboardPage() {
   const { data: slidersPage } = useSliders(0, 1000, "id,desc");
   const { data: partners } = usePartners();
 
-  const kpi = useMemo(
-    () => [
-      {
-        label: "Toplam Kullanıcı",
-        value: (
-          usersPage?.totalElements ??
-          usersPage?.content?.length ??
-          0
-        ).toLocaleString("tr-TR"),
-        delta: "+3.1%",
-        icon: Users,
-        badge: "success" as const,
-      },
-      {
-        label: "Aktif Bildirim",
-        value: (
-          notifPage?.totalElements ??
-          notifPage?.content?.length ??
-          0
-        ).toLocaleString("tr-TR"),
-        delta: "+1.4%",
-        icon: BellRing,
-        badge: "secondary" as const,
-      },
-      {
-        label: "Portföy Sayısı",
-        value: (
-          portfoliosPage?.totalElements ??
-          portfoliosPage?.content?.length ??
-          0
-        ).toLocaleString("tr-TR"),
-        delta: "+0.9%",
-        icon: Briefcase,
-        badge: "outline" as const,
-      },
-      {
-        label: "Slider Sayısı",
-        value: (
-          slidersPage?.totalElements ??
-          slidersPage?.content?.length ??
-          0
-        ).toLocaleString("tr-TR"),
-        delta: "+0.6%",
-        icon: Briefcase,
-        badge: "secondary" as const,
-      },
-      {
-        label: "Partner Sayısı",
-        value: (partners?.length ?? 0).toLocaleString("tr-TR"),
-        delta: "+0.4%",
-        icon: Briefcase,
-        badge: "default" as const,
-      },
-      {
-        label: "Büyüme",
-        value: "%27",
-        delta: "+5.2%",
-        icon: TrendingUp,
-        badge: "default" as const,
-      },
-    ],
-    [usersPage, notifPage, portfoliosPage, slidersPage, partners]
-  );
-
-  const chartData = useMemo(() => {
-    const usersTotal =
-      usersPage?.totalElements ?? usersPage?.content?.length ?? 0;
-    const notifTotal =
-      notifPage?.totalElements ?? notifPage?.content?.length ?? 0;
-    const portfoliosTotal =
-      portfoliosPage?.totalElements ?? portfoliosPage?.content?.length ?? 0;
-    const slidersTotal =
-      slidersPage?.totalElements ?? slidersPage?.content?.length ?? 0;
-    const partnersTotal = partners?.length ?? 0;
-
-    return [
-      { name: "Kullanıcı", value: usersTotal },
-      { name: "Bildirim", value: notifTotal },
-      { name: "Portföy", value: portfoliosTotal },
-      { name: "Slider", value: slidersTotal },
-      { name: "Partner", value: partnersTotal },
-    ];
-  }, [usersPage, notifPage, portfoliosPage, slidersPage, partners]);
-
-  const chartConfig: ChartConfig = {
-    Kullanıcı: {
-      label: "Kullanıcı",
-      color: "var(--planb-main)",
-    },
-    Bildirim: {
-      label: "Bildirim",
-      color: "var(--chart-orange)",
-    },
-    Portföy: {
-      label: "Portföy",
-      color: "var(--chart-brown)",
-    },
-    Slider: {
-      label: "Slider",
-      color: "var(--chart-muted-brown)",
-    },
-    Partner: {
-      label: "Partner",
-      color: "var(--planb-green)",
-    },
-  };
+  // removed unused KPI and chart config computations
 
   // Weekly comparison data - Users vs Notification Subs
   const weeklyData = useMemo(() => {

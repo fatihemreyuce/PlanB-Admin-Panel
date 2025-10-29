@@ -1,4 +1,4 @@
-import { Link, useLocation, useMatch } from "react-router-dom";
+import { Link, useMatch } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
@@ -16,9 +16,20 @@ import {
 } from "lucide-react";
 import { useLoginState } from "@/hooks/use-login-state";
 import { useUserMe } from "@/hooks/use-user";
+import {
+  Sidebar as ShadcnSidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+} from "@/components/ui/sidebar";
 
 export default function Sidebar() {
-  const location = useLocation();
   const { logout } = useLoginState();
   const { data: currentUser } = useUserMe();
 
@@ -91,55 +102,74 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-60 bg-gradient-sidebar border-r border-planb-grey-2">
-      <div className="flex flex-col h-full">
-        {/* Logo Section */}
-        <div className="p-6">
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold text-sidebar-dark-blue">
-              PlanB<span className="text-sidebar-orange">.</span>
-            </h1>
+    <SidebarProvider
+      className="h-0 min-h-0 w-0 overflow-visible"
+      style={{ ["--sidebar-width"]: "15rem" } as React.CSSProperties}
+    >
+      <ShadcnSidebar
+        variant="sidebar"
+        collapsible="offcanvas"
+        className="fixed left-0 top-0 h-screen border-r border-planb-grey-2 [&_[data-sidebar=sidebar]]:bg-transparent"
+      >
+        <SidebarHeader>
+          <div className="p-6">
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold text-sidebar-dark-blue">
+                PlanB<span className="text-sidebar-orange">.</span>
+              </h1>
+            </div>
           </div>
-        </div>
+        </SidebarHeader>
 
-        {/* Navigation */}
-        <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = useMatch({ path: item.path });
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {menuItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = useMatch({ path: item.path });
+                  return (
+                    <SidebarMenuItem key={item.path}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={Boolean(isActive)}
+                        className={`${
+                          isActive ? "bg-white shadow-sm" : ""
+                        } rounded-full px-4 py-3 gap-3 transition-all duration-200`}
+                      >
+                        <Link
+                          to={item.path}
+                          className="group flex items-center gap-3"
+                        >
+                          <Icon
+                            className={`h-5 w-5 ${
+                              item.rotate ? "rotate-45" : ""
+                            } ${
+                              isActive
+                                ? "text-dashboard-primary"
+                                : "text-sidebar-inactive"
+                            }`}
+                          />
+                          <span
+                            className={`text-sm font-semibold ${
+                              isActive
+                                ? "text-dashboard-primary"
+                                : "text-sidebar-inactive"
+                            }`}
+                          >
+                            {item.title}
+                          </span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
 
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`group flex items-center gap-3 px-4 py-3 rounded-full transition-all duration-200 ${
-                  isActive ? "bg-white shadow-sm" : "hover:bg-white/50"
-                }`}
-              >
-                <Icon
-                  className={`h-5 w-5 ${item.rotate ? "rotate-45" : ""} ${
-                    isActive
-                      ? "text-dashboard-primary"
-                      : "text-sidebar-inactive group-hover:text-dashboard-primary"
-                  }`}
-                />
-                <span
-                  className={`text-sm font-semibold ${
-                    isActive
-                      ? "text-dashboard-primary"
-                      : "text-sidebar-inactive group-hover:text-dashboard-primary"
-                  }`}
-                >
-                  {item.title}
-                </span>
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* Footer */}
-        <div className="p-4 space-y-1.5">
-          {/* User Info */}
+        <SidebarFooter className="p-4 space-y-1.5">
           {currentUser && (
             <div className="bg-white/60 backdrop-blur-sm rounded-xl p-2.5 border border-white/20">
               <div className="flex items-center gap-2.5">
@@ -157,8 +187,6 @@ export default function Sidebar() {
               </div>
             </div>
           )}
-
-          {/* Logout Button */}
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg bg-sidebar-dark-blue text-white/90 hover:text-white transition-colors"
@@ -166,8 +194,8 @@ export default function Sidebar() {
             <LogOut className="h-3.5 w-3.5" />
             <span className="text-xs font-medium">Çıkış Yap</span>
           </button>
-        </div>
-      </div>
-    </aside>
+        </SidebarFooter>
+      </ShadcnSidebar>
+    </SidebarProvider>
   );
 }

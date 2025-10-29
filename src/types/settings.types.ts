@@ -1,5 +1,5 @@
 export interface SettingsRequest {
-  siteLogo: string | File;
+  siteLogo?: string | File;
   maintenanceMode: boolean;
   aboutUsDescription: string;
   email: string;

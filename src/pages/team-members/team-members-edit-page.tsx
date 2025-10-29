@@ -14,13 +14,7 @@ import {
   useGetTeamMemberById,
   useUpdateTeamMember,
 } from "@/hooks/use-team-members";
-import {
-  ArrowLeft,
-  UserCog,
-  Upload,
-  X,
-  Image as ImageIcon,
-} from "lucide-react";
+import { UserCog, Upload, X, Image as ImageIcon } from "lucide-react";
 import type { TeamMemberRequest } from "@/types/team-members.types";
 
 export default function TeamMembersEditPage() {
@@ -36,7 +30,7 @@ export default function TeamMembersEditPage() {
   const [quote, setQuote] = useState("");
   const [linkedinUrl, setLinkedinUrl] = useState("");
   const [orderNumber, setOrderNumber] = useState(1);
-  const [profilePhoto, setProfilePhoto] = useState("");
+  // removed unused string state; use File and preview only
   const [profilePhotoFile, setProfilePhotoFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -50,7 +44,7 @@ export default function TeamMembersEditPage() {
       setQuote(member.quote);
       setLinkedinUrl(member.linkedinUrl);
       setOrderNumber(member.orderNumber);
-      setProfilePhoto(member.profilePhoto);
+      // no string state for profile photo; preview is set below
       // Set preview with correct URL format
       if (member.profilePhoto && member.profilePhoto.trim() !== "") {
         const photoUrl = member.profilePhoto.startsWith("http")
@@ -72,7 +66,6 @@ export default function TeamMembersEditPage() {
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreview(reader.result as string);
-      setProfilePhoto(reader.result as string);
     };
     reader.readAsDataURL(file);
   };
@@ -110,7 +103,6 @@ export default function TeamMembersEditPage() {
     } else {
       setPreview(null);
     }
-    setProfilePhoto("");
     if (inputRef.current) inputRef.current.value = "";
   };
 
@@ -173,7 +165,7 @@ export default function TeamMembersEditPage() {
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="bg-dashboard-bg-card rounded-xl shadow-lg border border-planb-grey-2 overflow-hidden">
-          <div className="bg-gradient-to-br from-sky-600 to-blue-600 p-8">
+          <div className="bg-linear-to-br from-sky-600 to-blue-600 p-8">
             <div className="flex items-center gap-4">
               <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-sm">
                 <UserCog className="h-8 w-8 text-white" />
@@ -356,7 +348,7 @@ export default function TeamMembersEditPage() {
                 <Button
                   type="submit"
                   disabled={updateMemberMutation.isPending}
-                  className="h-12 px-8 font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
+                  className="h-12 px-8 font-semibold bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
                 >
                   {updateMemberMutation.isPending ? (
                     <>

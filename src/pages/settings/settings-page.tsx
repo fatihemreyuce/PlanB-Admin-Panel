@@ -27,7 +27,6 @@ import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
@@ -127,8 +126,8 @@ export default function SettingsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Only include siteLogo if there's a new file to upload
-    const request: Record<string, unknown> = {
+    // Build strongly-typed request
+    const request: SettingsRequest = {
       maintenanceMode: form.maintenanceMode,
       aboutUsDescription: form.aboutUsDescription,
       email: form.email,
@@ -138,18 +137,11 @@ export default function SettingsPage() {
       youtubeUrl: form.youtubeUrl,
       teamMembersHeader: form.teamMembersHeader,
       teamMembersDescription: form.teamMembersDescription,
+      ...(iconFile ? { siteLogo: iconFile } : {}),
     };
 
-    // Only add siteLogo if we have a new file
-    if (iconFile) {
-      request.siteLogo = iconFile;
-    }
-
     try {
-      await updateMutation.mutateAsync({
-        id,
-        request: request as SettingsRequest,
-      });
+      await updateMutation.mutateAsync({ id, request });
     } catch (error) {
       console.error("Error updating settings:", error);
     }

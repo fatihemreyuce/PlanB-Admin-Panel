@@ -7,7 +7,6 @@ import {
   Edit,
   Trash2,
   Briefcase,
-  Link as LinkIcon,
   Calendar,
   XCircle,
   AlertTriangle,
